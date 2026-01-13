@@ -1,0 +1,68 @@
+import React, { useContext, useState } from 'react';
+import { GroupContext } from '../../context/GroupContext';
+import { ChatContext } from '../../context/ChatContext';
+import { AuthContext } from '../../context/AuthContext';
+import assets from '../assets/assets';
+
+const CreateGroupModal = ({ onClose }) => {
+    const { createGroup } = useContext(GroupContext);
+    const { users } = useContext(ChatContext);
+    const [groupName, setGroupName] = useState('');
+    const [selectedMembers, setSelectedMembers] = useState([]);
+
+    const toggleMember = (userId) => {
+        setSelectedMembers(prev =>
+            prev.includes(userId) ? prev.filter(id => id !== userId) : [...prev, userId]
+        );
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!groupName.trim()) return;
+        if (selectedMembers.length === 0) return;
+
+        const success = await createGroup(groupName, selectedMembers);
+        if (success) {
+            onClose();
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-[#1c1c1c] p-6 rounded-lg w-full max-w-md border border-gray-700">
+                <h2 className="text-xl text-white mb-4 font-semibold">Create New Group</h2>
+
+                <input
+                    type="text"
+                    placeholder="Group Name"
+                    className="w-full bg-[#2c2c2c] text-white p-3 rounded-lg mb-4 outline-none border border-gray-600 focus:border-violet-500"
+                    value={groupName}
+                    onChange={(e) => setGroupName(e.target.value)}
+                />
+
+                <div className="mb-4">
+                    <p className="text-gray-400 mb-2 text-sm">Select Members</p>
+                    <div className="max-h-48 overflow-y-auto space-y-2">
+                        {users.map(user => (
+                            <div
+                                key={user._id}
+                                onClick={() => toggleMember(user._id)}
+                                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${selectedMembers.includes(user._id) ? 'bg-violet-500/20 border border-violet-500' : 'hover:bg-[#2c2c2c]'}`}
+                            >
+                                <img src={user.profilePic || assets.avatar_icon} className="w-8 h-8 rounded-full object-cover" alt="" />
+                                <span className="text-white">{user.fullName}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-6">
+                    <button onClick={onClose} className="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
+                    <button onClick={handleSubmit} className="px-6 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg">Create Group</button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CreateGroupModal;
