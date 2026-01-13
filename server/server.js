@@ -15,7 +15,7 @@ const server = http.createServer(app);
 // Initialize socket.io server
 export const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173", "https://chat-web-bice-omega.vercel.app"],
+        origin: ["http://localhost:5173", "https://chat-web-bice-omega.vercel.app", "https://chat-web-git-main-surajixcps-projects.vercel.app"],
         methods: ["GET", "POST"],
         credentials: true,
     }
@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors({
-    origin: ["http://localhost:5173", "https://chat-web-bice-omega.vercel.app"],
+    origin: ["http://localhost:5173", "https://chat-web-bice-omega.vercel.app", "https://chat-web-git-main-surajixcps-projects.vercel.app"],
     credentials: true,
 }));
 
