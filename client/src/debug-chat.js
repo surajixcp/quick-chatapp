@@ -42,7 +42,7 @@ const testAPIEndpoints = async () => {
 
     try {
         // Test auth check
-        const authResponse = await fetch('http://localhost:5000/api/auth/check', {
+        const authResponse = await fetch('https://chat-web-l3lo.onrender.com/api/auth/check', {
             headers: {
                 'token': token
             }
@@ -51,7 +51,7 @@ const testAPIEndpoints = async () => {
         console.log('Auth check response:', authData);
 
         // Test users endpoint
-        const usersResponse = await fetch('http://localhost:5000/api/messages/users', {
+        const usersResponse = await fetch('https://chat-web-l3lo.onrender.com/api/messages/users', {
             headers: {
                 'token': token
             }
