@@ -27,36 +27,39 @@ const LoginPage = () => {
 
   }
   return (
-    <div className='min-h-screen bg-cover bg-center flex items-center justify-center gap-8 sm:justify-evenly max-sm:flex-col backdrop-blur-2xl'>
+    <div className='min-h-screen flex items-center justify-center p-4 gap-8 lg:gap-32 max-lg:flex-col'>
       {/* ------------left--------------- */}
-      <img src={assets.logo_big} alt="" className='w-[min(30vw,250px)]' />
+      <div className='flex flex-col items-center gap-2 animate-float'>
+        <img src={assets.logo_big} alt="QuickChat Logo" className='w-[min(40vw,280px)]' />
+        <h1 className='text-4xl font-bold text-white tracking-tight'>QuickChat</h1>
+      </div>
       {/* ------------right--------------- */}
 
-      <form onSubmit={onSubmitHandler} className='border-2 bg-white/8 text-white border-gray-500 p-6 flex flex-col gap-6 rounded-lg shadow-lg'>
+      <form onSubmit={onSubmitHandler} className='w-full max-w-[400px] bg-[#1c1c1c]/40 backdrop-blur-xl text-white border border-white/10 p-8 flex flex-col gap-6 rounded-2xl shadow-2xl relative z-10'>
         <h2 className='font-medium text-2xl flex justify-between items-center'>
           {currState}
           {isDataSubmitted && <img onClick={() => setIsDataSubmitted(false)} src={assets.arrow_icon} alt="" className='w-5 cursor-pointer' />}
         </h2>
 
         {currState === "Sign up" && !isDataSubmitted && (
-          <input onChange={(e) => setFullName(e.target.value)} value={fullName} type="text" className='p-2 border border-gray-500 rounded-md focus:outline-none' placeholder='Full Name' />
+          <input onChange={(e) => setFullName(e.target.value)} value={fullName} type="text" className='p-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-gray-500' placeholder='Full Name' />
         )}
 
         {!isDataSubmitted && (
           <>
             <input onChange={(e) => setEmail(e.target.value)} value={email}
               type="email" placeholder='Email Address' required
-              className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500' />
+              className='p-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-gray-500' />
 
             <input onChange={(e) => setPassword(e.target.value)} value={password}
               type="password" placeholder='Password' required
-              className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500' />
+              className='p-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-gray-500' />
           </>
         )}
 
         {
           currState === "Sign up" && !isDataSubmitted && (
-            <textarea onChange={(e) => setBio(e.target.value)} value={bio} rows={4} className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500'></textarea>
+            <textarea onChange={(e) => setBio(e.target.value)} value={bio} rows={4} className='p-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/50 transition-all placeholder:text-gray-500' placeholder="Tell us about yourself..."></textarea>
           )
         }
 
@@ -64,16 +67,16 @@ const LoginPage = () => {
           {currState === 'Sign up' ? 'Create Account' : "Login"}
         </button>
 
-        <div>
-          <input type="checkbox" />
-          <p>Agree to the terms of use & privacy policy.</p>
+        <div className='flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5'>
+          <input type="checkbox" className='w-4 h-4 rounded border-gray-600 bg-gray-700 text-violet-600 focus:ring-violet-500' id="terms" required />
+          <label htmlFor="terms" className='text-xs text-gray-400 cursor-pointer'>Agree to the terms of use & privacy policy.</label>
         </div>
 
-        <div className='flex flex-col gap-2'>
+        <div className='text-center mt-2'>
           {currState === 'Sign up' ? (
-            <p className='text-sm text-gray-600'>Already have an account?<span onClick={() => { setCurrState("Login"); setIsDataSubmitted(false) }} className='font-medium text-violet-500 cursor-pointer'>Login here</span></p>
+            <p className='text-sm text-gray-400'>Already have an account? <span onClick={() => { setCurrState("Login"); setIsDataSubmitted(false) }} className='font-medium text-violet-400 hover:text-violet-300 cursor-pointer transition-colors'>Login here</span></p>
           ) : (
-            <p className='text-sm text-gray-600'>Create an account <span onClick={() => { setCurrState("Sign up"); setIsDataSubmitted(false) }} className='font-medium text-violet-500 cursor-pointer'>Click here</span></p>
+            <p className='text-sm text-gray-400'>New to QuickChat? <span onClick={() => { setCurrState("Sign up"); setIsDataSubmitted(false) }} className='font-medium text-violet-400 hover:text-violet-300 cursor-pointer transition-colors'>Create an account</span></p>
           )}
         </div>
       </form>

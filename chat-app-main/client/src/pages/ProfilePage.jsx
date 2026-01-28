@@ -30,8 +30,8 @@ const ProfilePage = () => {
 
 
   return (
-    <div className='min-h-screen bg-cover bg-no-repeat flex items-center justify-center p-4'>
-      <div className='w-full max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-md:flex-col-reverse rounded-lg'>
+    <div className='min-h-screen flex items-center justify-center p-4'>
+      <div className='w-full max-w-2xl bg-[#1c1c1c]/40 backdrop-blur-xl text-gray-300 border border-white/10 flex items-center justify-between max-md:flex-col-reverse rounded-2xl shadow-2xl overflow-hidden'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>
           <h3 className='text-lg'>Profile details</h3>
           <div className='flex items-center gap-2'>
