@@ -58,7 +58,7 @@ const CreateGroupModal = ({ onClose }) => {
 
                 <div className="flex justify-end gap-3 mt-6">
                     <button onClick={onClose} className="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
-                    <button onClick={handleSubmit} className="px-6 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg">Create Group</button>
+                    <button onClick={handleSubmit} className="px-6 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:shadow-lg hover:shadow-violet-500/30 text-white rounded-xl font-medium transition-all active:scale-95">Create Group</button>
                 </div>
             </div>
         </div>

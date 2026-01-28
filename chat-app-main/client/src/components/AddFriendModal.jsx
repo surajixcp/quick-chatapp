@@ -72,7 +72,7 @@ const AddFriendModal = ({ onClose }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="bg-violet-600 text-white px-6 py-2 rounded-lg hover:bg-violet-700 disabled:opacity-50 transition-colors font-medium"
+                        className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-2 rounded-xl hover:shadow-lg hover:shadow-violet-500/30 disabled:opacity-50 transition-all font-medium active:scale-95"
                     >
                         {loading ? '...' : 'Search'}
                     </button>
@@ -92,7 +92,7 @@ const AddFriendModal = ({ onClose }) => {
                         ) : (
                             <button
                                 onClick={handleAddFriend}
-                                className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 text-sm transition-colors shadow-lg hover:shadow-green-500/20"
+                                className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-full hover:shadow-lg hover:shadow-green-500/30 text-sm transition-all active:scale-95"
                             >
                                 Add +
                             </button>

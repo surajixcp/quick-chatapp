@@ -136,20 +136,23 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                     <img src={msg.image} alt='' className='max-w-[280px] border border-white/10 rounded-2xl overflow-hidden mb-8 shadow-lg hover:scale-[1.02] transition-transform' />
                   ) : (
                     <p className={`p-3 px-4 max-w-[280px] md:max-w-md md:text-sm font-light shadow-md mb-8 break-all ${msg.senderId == authUser._id
-                        ? 'bg-violet-600 rounded-2xl rounded-tr-md text-white'
-                        : 'bg-white/10 backdrop-blur-md rounded-2xl rounded-tl-md text-gray-100 border border-white/5'
+                      ? 'bg-violet-600 rounded-2xl rounded-tr-md text-white'
+                      : 'bg-white/10 backdrop-blur-md rounded-2xl rounded-tl-md text-gray-100 border border-white/5'
                       }`}>{msg.text}</p>
                   )}
                 </div>
 
                 {/* Delete Options */}
                 {selectedMessageId === msg._id && (
-                  <div className={`absolute top-5 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[100px]`}>
-                    <button onClick={() => handleCopy(msg)} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>{msg.image ? "Copy Media" : "Copy Text"}</button>
-                    <button onClick={() => handleForward(msg)} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>Forward</button>
-                    <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>Delete for me</button>
+                  <div className={`absolute top-5 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-[#1c1c1c]/90 backdrop-blur-xl border border-white/10 text-gray-200 text-xs rounded-xl shadow-2xl z-50 p-1.5 flex flex-col gap-1 min-w-[140px] overflow-hidden`}>
+                    <button onClick={() => handleCopy(msg)} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors flex items-center gap-2'>
+                      {/* You could add icons here later if you imported them */}
+                      {msg.image ? "Copy Media" : "Copy Text"}
+                    </button>
+                    <button onClick={() => handleForward(msg)} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors'>Forward</button>
+                    <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10'>Delete for me</button>
                     {msg.senderId === authUser._id && (
-                      <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>Delete for everyone</button>
+                      <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10'>Delete for everyone</button>
                     )}
                   </div>
                 )}
@@ -217,9 +220,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
     </div>
   ) : (
-    <div className='flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden'>
-      <img src={assets.logo_icon} alt="" className='max-w-16' />
-      <p className='text-lg font-medium text-white'>Chat anytime, anywhere</p>
+    <div className='flex flex-col items-center justify-center gap-4 text-gray-500 bg-black/20 backdrop-blur-sm max-md:hidden h-full border-l border-white/5'>
+      <div className='p-6 bg-white/5 rounded-full mb-2 animate-pulse'>
+        <img src={assets.logo_icon} alt="" className='max-w-16 opacity-50' />
+      </div>
+      <p className='text-xl font-medium text-white/80 tracking-wide'>Chat anytime, anywhere</p>
+      <p className='text-sm text-gray-500'>Select a connection to start messaging</p>
     </div>
   )
 }

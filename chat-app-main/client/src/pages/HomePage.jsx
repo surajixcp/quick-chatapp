@@ -27,7 +27,15 @@ const HomePage = () => {
 
         {/* ChatContainer */}
         <div className={`${!selectedUser ? 'max-md:hidden' : 'w-full'} flex flex-col relative h-full overflow-hidden`}>
-          {selectedUser ? <ChatContainer showRightSidebar={showRightSidebar} setShowRightSidebar={setShowRightSidebar} /> : <div className='flex items-center justify-center h-full text-gray-500'>Select a chat to start messaging</div>}
+          {selectedUser ? <ChatContainer showRightSidebar={showRightSidebar} setShowRightSidebar={setShowRightSidebar} /> : (
+            <div className='flex flex-col items-center justify-center h-full gap-4 text-gray-500 bg-black/20 backdrop-blur-sm transition-all animate-fade-in-up'>
+              <div className='p-6 bg-white/5 rounded-full mb-2 animate-pulse'>
+                <img src={assets.logo_icon} alt="" className='max-w-16 opacity-50' />
+              </div>
+              <p className='text-xl font-medium text-white/80 tracking-wide'>Chat anytime, anywhere</p>
+              <p className='text-sm text-gray-500'>Select a connection to start messaging</p>
+            </div>
+          )}
         </div>
 
         {/* RightSidebar */}
