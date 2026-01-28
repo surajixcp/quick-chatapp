@@ -76,7 +76,10 @@ const Sidebar = ({ activeTab }) => {
                 <div
                   onClick={() => { setSelectedUser(group); }} // Treating group as user for selection
                   key={group._id}
-                  className={`relative flex items-center gap-3 p-2 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === group._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
+                  className={`relative flex items-center gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all duration-200 max-sm:text-sm ${selectedUser?._id === group._id
+                      ? 'bg-violet-600/30 border border-violet-500/30 shadow-[0_0_15px_rgba(124,58,237,0.2)]'
+                      : 'hover:bg-white/5 border border-transparent'
+                    }`}
                 >
                   <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white border border-indigo-400/30">{group.name[0]}</div>
                   <div className='flex flex-col leading-5'>
@@ -96,7 +99,10 @@ const Sidebar = ({ activeTab }) => {
                 <div
                   onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
                   key={index}
-                  className={`relative flex items-center gap-3 p-2 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === user._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
+                  className={`relative flex items-center gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all duration-200 max-sm:text-sm ${selectedUser?._id === user._id
+                      ? 'bg-violet-600/30 border border-violet-500/30 shadow-[0_0_15px_rgba(124,58,237,0.2)]'
+                      : 'hover:bg-white/5 border border-transparent'
+                    }`}
                 >
                   <img src={user?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/10' />
                   <div className='flex flex-col leading-5'>

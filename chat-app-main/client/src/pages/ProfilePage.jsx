@@ -30,41 +30,85 @@ const ProfilePage = () => {
 
 
   return (
-    <div className='min-h-screen flex items-center justify-center p-4'>
-      <div className='w-full max-w-2xl bg-[#1c1c1c]/40 backdrop-blur-xl text-gray-300 border border-white/10 flex items-center justify-between max-md:flex-col-reverse rounded-2xl shadow-2xl overflow-hidden'>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>
-          <h3 className='text-lg'>Profile details</h3>
-          <div className='flex items-center gap-2'>
-            <img src={assets.logo_icon} className='w-4 h-4 opacity-50' alt="User" />
-            <p className='text-sm font-light'>{authUser.fullName}</p>
+    <div className='min-h-screen flex items-center justify-center p-4 relative overflow-hidden'>
+      {/* Background Glow - Fixed to match Login */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[100px] -z-10 animate-pulse pointer-events-none"></div>
+
+      <div className='w-full max-w-4xl bg-black/40 backdrop-blur-2xl text-white border border-white/10 flex max-md:flex-col-reverse rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden animate-fade-in-up relative z-10'>
+
+        {/* Form Section */}
+        <form onSubmit={handleSubmit} className='flex flex-col gap-6 p-8 md:p-12 flex-1'>
+          <div className='flex items-center justify-between mb-4'>
+            <h3 className='text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-purple-400'>Edit Profile</h3>
+            <div onClick={() => navigate('/')} className='text-gray-400 hover:text-white cursor-pointer text-sm font-medium transition-colors'>Cancel</div>
           </div>
-          <div className='flex items-center gap-2'>
-            <p className='text-xs text-violet-300 bg-violet-900/30 px-2 py-1 rounded'>ID: @{authUser.username || 'user'}</p>
+
+          <div className='space-y-4'>
+            <div className='flex flex-col gap-2'>
+              <label className="text-xs font-medium text-gray-400 ml-1 uppercase tracking-wide">Display Name</label>
+              <div className='flex items-center gap-3 p-4 bg-black/30 border border-white/10 rounded-2xl focus-within:border-violet-500/50 focus-within:bg-black/50 transition-all'>
+                <img src={assets.logo_icon} className='w-5 h-5 opacity-50' alt="User" />
+                <input
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  type="text"
+                  required
+                  placeholder='Your name'
+                  className='bg-transparent border-none outline-none flex-1 text-white placeholder-gray-500 text-sm'
+                />
+              </div>
+            </div>
+
+            <div className='flex flex-col gap-2'>
+              <label className="text-xs font-medium text-gray-400 ml-1 uppercase tracking-wide">Bio</label>
+              <textarea
+                onChange={(e) => setBio(e.target.value)}
+                value={bio}
+                placeholder='Tell us about yourself...'
+                required
+                rows={4}
+                className='w-full p-4 bg-black/30 border border-white/10 rounded-2xl focus:outline-none focus:ring-1 focus:ring-violet-500/50 focus:bg-black/50 transition-all text-sm resize-none placeholder-gray-500 text-white'
+              ></textarea>
+            </div>
           </div>
-          <div className='flex items-center gap-2'>
-            <span className="text-gray-500 text-xs">Email:</span>
-            <p className='text-sm font-light'>{authUser.email}</p>
-          </div>
-          <label htmlFor='avatar' className='flex items-center gap-3 cursor-pointer'>
-            <input onChange={(e) => setSelectedImg(e.target.files[0])} type="file" id='avatar' accept='.png, .jpg, .jpeg' hidden />
-            <img src={selectedImg ? URL.createObjectURL(selectedImg) : assets.avatar_icon} alt="" className={`w-12 h-12 ${selectedImg && 'rounded-full'}`} />
-            upload profile image
-          </label>
-          <input onChange={(e) => setName(e.target.value)} value={name} type="text" required placeholder='Your name' className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' />
-          <textarea onChange={(e) => setBio(e.target.value)} value={bio} placeholder='Write profile bio' required className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' rows={4}></textarea>
-          <button type='submit' className='bg-gradient-to-r from-purple-400 to-violet-600 text-white p-2 rounded-full text-lg cursor-pointer'>Save</button>
+
+          <button type='submit' className='mt-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white p-4 rounded-xl font-semibold shadow-lg hover:shadow-violet-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300'>
+            Save Changes
+          </button>
         </form>
-        <div className="flex flex-col items-center gap-4 py-8">
-          <img className={`max-w-[150px] md:max-w-44 aspect-square rounded-full max-sm:mt-10 p-5 ${selectedImg && 'rounded-full'}`} src={authUser?.profilePic || assets.logo_icon} alt="" />
+
+        {/* Image Section */}
+        <div className="flex flex-col items-center justify-center gap-6 p-8 md:p-12 bg-white/5 border-l border-white/5 relative">
+          {/* Decorative bg element */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 pointer-events-none"></div>
+
+          <div className="relative group z-10">
+            <img
+              className={`w-40 h-40 md:w-48 md:h-48 rounded-full object-cover border-4 border-white/10 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:border-violet-500/30`}
+              src={selectedImg ? URL.createObjectURL(selectedImg) : authUser?.profilePic || assets.avatar_icon}
+              alt=""
+            />
+            <label htmlFor='avatar' className='absolute bottom-2 right-2 p-3 bg-violet-600 hover:bg-violet-500 rounded-full cursor-pointer shadow-lg transition-all hover:scale-110 active:scale-90'>
+              <img src={assets.logo_icon} className="w-5 h-5 filter brightness-0 invert" alt="Upload" />
+              <input onChange={(e) => setSelectedImg(e.target.files[0])} type="file" id='avatar' accept='.png, .jpg, .jpeg' hidden />
+            </label>
+          </div>
+
+          <div className='flex flex-col items-center gap-1 z-10'>
+            <p className='text-lg font-semibold text-white'>{authUser.fullName}</p>
+            <p className='text-sm text-violet-300 bg-violet-500/10 px-3 py-1 rounded-full border border-violet-500/20'>@{authUser.username || 'user'}</p>
+            <p className='text-xs text-gray-500 mt-1'>{authUser.email}</p>
+          </div>
+
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
                 deleteAccount();
               }
             }}
-            className='text-red-500 hover:text-red-700 text-sm underline cursor-pointer'
+            className='mt-auto text-red-400 hover:text-red-300 text-xs font-medium flex items-center gap-2 px-4 py-2 hover:bg-red-500/10 rounded-lg transition-all z-10'
           >
-            Delete Account
+            <span>Delete Account</span>
           </button>
         </div>
       </div>
