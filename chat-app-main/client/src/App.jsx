@@ -1,30 +1,30 @@
-import React, {useContext} from 'react'
-import {Navigate, Route, Routes } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import ProfilePage from './pages/ProfilePage'
-import {Toaster} from "react-hot-toast"
-import { AuthContext } from '../context/AuthContext.jsx'
+import bgImage from './assets/bgImage.svg'
 
 const App = () => {
-  const {authUser, isLoading} = useContext(AuthContext)
+  const { authUser, isLoading } = useContext(AuthContext)
 
   // Show loading spinner while checking authentication
   if (isLoading) {
     return (
-      <div className="bg-[url('./src/assets/bgImage.svg')] bg-contain min-h-screen flex items-center justify-center">
+      <div
+        className="bg-contain min-h-screen flex items-center justify-center"
+        style={{ backgroundImage: `url(${bgImage})` }}
+      >
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[url('./src/assets/bgImage.svg')] bg-contain">
-      <Toaster/>
+    <div
+      className="bg-contain min-h-screen"
+      style={{ backgroundImage: `url(${bgImage})`, backgroundAttachment: 'fixed' }}
+    >
+      <Toaster />
       <Routes>
-        <Route path='/' element={ authUser ? <HomePage /> : <Navigate to={'/login'} replace />}/>
-        <Route path='/login' element={ !authUser ? <LoginPage/> : <Navigate to={'/'} replace />}/>
-        <Route path='/profile' element={ authUser ? <ProfilePage /> : <Navigate to={'/login'} replace />}/>
+        <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'} replace />} />
+        <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={'/'} replace />} />
+        <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to={'/login'} replace />} />
       </Routes>
     </div>
   )

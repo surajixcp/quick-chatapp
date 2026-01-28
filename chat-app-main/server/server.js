@@ -13,9 +13,15 @@ const app = express();
 const server = http.createServer(app);
 
 // Initialize socket.io server
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL,
+    "https://quick-chatapp.onrender.com" // Adding the likely frontend URL based on previous context
+].filter(Boolean);
+
 export const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
+        origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: true,
     }
@@ -65,7 +71,7 @@ io.on("connection", (socket) => {
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
 }));
 
