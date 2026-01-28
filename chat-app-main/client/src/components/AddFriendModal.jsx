@@ -50,8 +50,8 @@ const AddFriendModal = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm">
-            <div className="bg-[#1e1e2d] p-8 rounded-2xl w-full max-w-md border border-gray-700 shadow-2xl relative animate-fade-in-up">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-md">
+            <div className="bg-black/40 backdrop-blur-2xl p-8 rounded-2xl w-full max-w-md border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative animate-fade-in-up">
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
@@ -67,7 +67,7 @@ const AddFriendModal = ({ onClose }) => {
                         value={searchUsername}
                         onChange={(e) => setSearchUsername(e.target.value)}
                         placeholder="Enter username (e.g. john1234)"
-                        className="flex-1 bg-gray-800 text-white p-3 rounded-lg border border-gray-600 focus:border-violet-500 outline-none transition-colors"
+                        className="flex-1 bg-black/30 text-white p-3 rounded-xl border border-white/10 focus:border-violet-500 outline-none transition-colors placeholder-gray-500"
                     />
                     <button
                         type="submit"
@@ -79,7 +79,7 @@ const AddFriendModal = ({ onClose }) => {
                 </form>
 
                 {foundUser && (
-                    <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700 flex items-center justify-between">
+                    <div className="bg-white/5 p-4 rounded-xl border border-white/10 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <img src={foundUser.profilePic || "/avatar.png"} alt="" className="w-12 h-12 rounded-full object-cover" />
                             <div>

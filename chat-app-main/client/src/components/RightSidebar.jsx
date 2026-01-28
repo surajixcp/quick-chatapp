@@ -39,7 +39,7 @@ const RightSidebar = ({ onClose }) => {
   }, [messages]);
 
   return selectedUser ? (
-    <div className={`text-white w-full h-full relative overflow-y-scroll bg-[#282142]`}>
+    <div className={`text-white w-full h-full relative overflow-y-scroll bg-black/40 backdrop-blur-xl`}>
       {/* Close button for mobile */}
       <button
         onClick={onClose}
@@ -49,7 +49,7 @@ const RightSidebar = ({ onClose }) => {
       </button>
 
       <div className='pt-12 flex flex-col items-center gap-4 text-xs font-light mx-auto'>
-        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-[#282142] shadow-lg' />
+        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-white/5 shadow-2xl' />
         <div className='flex flex-col items-center'>
           <h1 className='text-xl font-semibold flex items-center gap-2'>
             {selectedUser?.fullName}

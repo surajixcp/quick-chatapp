@@ -133,9 +133,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   className='cursor-pointer'
                 >
                   {msg.image ? (
-                    <img src={msg.image} alt='' className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden mb-8' />
+                    <img src={msg.image} alt='' className='max-w-[280px] border border-white/10 rounded-2xl overflow-hidden mb-8 shadow-lg hover:scale-[1.02] transition-transform' />
                   ) : (
-                    <p className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${msg.senderId == authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}>{msg.text}</p>
+                    <p className={`p-3 px-4 max-w-[280px] md:max-w-md md:text-sm font-light shadow-md mb-8 break-all ${msg.senderId == authUser._id
+                        ? 'bg-violet-600 rounded-2xl rounded-tr-md text-white'
+                        : 'bg-white/10 backdrop-blur-md rounded-2xl rounded-tl-md text-gray-100 border border-white/5'
+                      }`}>{msg.text}</p>
                   )}
                 </div>
 
@@ -164,12 +167,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-3 p-4 relative z-10'>
-        <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full relative shadow-lg'>
+      <div className='flex-none flex items-center gap-4 p-4 pb-5 relative z-10'>
+        <div className='flex-1 flex items-center bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-3 rounded-full relative shadow-2xl focus-within:border-violet-500/50 focus-within:bg-black/60 transition-all'>
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
-            <div className="absolute bottom-16 left-0 z-50 shadow-2xl rounded-xl overflow-hidden border border-white/10">
+            <div className="absolute bottom-16 left-0 z-50 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-2xl overflow-hidden border border-white/10 animate-fade-in-up">
               <EmojiPicker
                 theme="dark"
                 onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
@@ -197,7 +200,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             <ImagePlus className="w-6 h-6" />
           </label>
         </div>
-        <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
+        <button onClick={handleSendMessage} className='p-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] hover:scale-110 transition-all active:scale-95'>
           <SendHorizontal className="w-5 h-5 text-white" />
         </button>
       </div>

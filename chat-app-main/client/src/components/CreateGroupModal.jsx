@@ -28,14 +28,14 @@ const CreateGroupModal = ({ onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-            <div className="bg-[#1c1c1c] p-6 rounded-lg w-full max-w-md border border-gray-700">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-md">
+            <div className="bg-black/40 backdrop-blur-2xl p-6 rounded-2xl w-full max-w-md border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
                 <h2 className="text-xl text-white mb-4 font-semibold">Create New Group</h2>
 
                 <input
                     type="text"
                     placeholder="Group Name"
-                    className="w-full bg-[#2c2c2c] text-white p-3 rounded-lg mb-4 outline-none border border-gray-600 focus:border-violet-500"
+                    className="w-full bg-black/30 text-white p-3 rounded-xl mb-4 outline-none border border-white/5 focus:border-violet-500 transition-all placeholder-gray-500"
                     value={groupName}
                     onChange={(e) => setGroupName(e.target.value)}
                 />
@@ -47,7 +47,7 @@ const CreateGroupModal = ({ onClose }) => {
                             <div
                                 key={user._id}
                                 onClick={() => toggleMember(user._id)}
-                                className={`flex items-center gap-3 p-2 rounded cursor-pointer ${selectedMembers.includes(user._id) ? 'bg-violet-500/20 border border-violet-500' : 'hover:bg-[#2c2c2c]'}`}
+                                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${selectedMembers.includes(user._id) ? 'bg-violet-500/20 border border-violet-500/50' : 'hover:bg-white/5 border border-transparent'}`}
                             >
                                 <img src={user.profilePic || assets.avatar_icon} className="w-8 h-8 rounded-full object-cover" alt="" />
                                 <span className="text-white">{user.fullName}</span>

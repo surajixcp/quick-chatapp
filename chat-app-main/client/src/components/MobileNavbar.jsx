@@ -6,7 +6,7 @@ const MobileNavbar = ({ activeTab, setActiveTab, onLogout }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#282142]/90 backdrop-blur-lg border-t border-white/10 flex items-center justify-around py-3 px-6 z-50">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10 flex items-center justify-around py-3 px-6 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
             <button
                 onClick={() => setActiveTab('chats')}
                 className={`flex flex-col items-center gap-1 transition-colors ${activeTab === 'chats' ? 'text-violet-400' : 'text-gray-400'}`}

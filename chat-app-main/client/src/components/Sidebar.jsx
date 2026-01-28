@@ -28,7 +28,7 @@ const Sidebar = ({ activeTab }) => {
   }, [authUser, onlineUsers])
 
   return (
-    <div className={`bg-[#8185B2]/10 h-full flex flex-col rounded-r-xl overflow-hidden text-white ${selectedUser ? "max-md:hidden" : ""}`}>
+    <div className={`h-full flex flex-col overflow-hidden text-white ${selectedUser ? "max-md:hidden" : ""}`}>
       <div className='p-5 pb-0 flex-1 overflow-y-auto custom-scrollbar'>
         <div className='pb-5'>
           <div className='flex justify-between items-center'>
@@ -45,21 +45,22 @@ const Sidebar = ({ activeTab }) => {
               </div>
               <div className='relative py-2 group'>
                 <MoreVertical className='w-5 h-5 cursor-pointer text-gray-300 hover:text-white' />
-                <div className='absolute top-full right-0 z-20 w-32 p-1 rounded-lg bg-[#282142] border border-gray-700 shadow-xl text-gray-100 hidden group-hover:block overflow-hidden'>
-                  <p onClick={() => navigate('/profile')} className='cursor-pointer text-sm p-3 hover:bg-white/5 transition-colors'>Edit Profile</p>
-                  <div className='h-[1px] bg-gray-700 mx-2'></div>
-                  <p onClick={() => logout()} className='cursor-pointer text-sm p-3 hover:bg-white/5 transition-colors text-red-400'>Logout</p>
+                <div className='absolute top-full right-0 z-20 w-32 p-1 rounded-2xl bg-[#1c1c1c]/90 backdrop-blur-xl border border-white/10 shadow-xl text-gray-100 hidden group-hover:block overflow-hidden'>
+                  <p onClick={() => navigate('/profile')} className='cursor-pointer text-sm p-3 hover:bg-white/10 transition-colors'>Edit Profile</p>
+                  <div className='h-[1px] bg-white/10 mx-2'></div>
+                  <p onClick={() => logout()} className='cursor-pointer text-sm p-3 hover:bg-white/10 transition-colors text-red-400'>Logout</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className='bg-[#282142] rounded-full flex items-center gap-2 py-2 px-4 mt-5 border border-transparent focus-within:border-violet-500/50 transition-all'>
+
+          <div className='bg-black/20 rounded-2xl flex items-center gap-2 py-3 px-4 mt-5 border border-white/5 focus-within:border-violet-500/50 focus-within:bg-black/30 transition-all'>
             <Search className='w-4 h-4 text-gray-400' />
             <input
               onChange={(e) => setInput(e.target.value)}
               type="text"
-              className='bg-transparent border-none outline-none text-white text-sm placeholder-gray-400 flex-1'
+              className='bg-transparent border-none outline-none text-white text-sm placeholder-gray-500 flex-1'
               placeholder='Search Connections...'
             />
           </div>
@@ -135,7 +136,7 @@ const Sidebar = ({ activeTab }) => {
       </div>
 
       {/* Developer Details Footer */}
-      <div className="p-4 border-t border-white/5 bg-[#282142]/30 backdrop-blur-sm text-center">
+      <div className="p-4 border-t border-white/5 bg-black/10 backdrop-blur-sm text-center">
         <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-1">Developer</p>
         <p className="text-sm font-medium text-violet-300">Suraj Giri</p>
         <p className="text-[10px] text-gray-400">Senior Software Developer</p>
@@ -143,7 +144,7 @@ const Sidebar = ({ activeTab }) => {
 
       {showCreateGroup && <CreateGroupModal onClose={() => setShowCreateGroup(false)} />}
       {showAddFriend && <AddFriendModal onClose={() => setShowAddFriend(false)} />}
-    </div>
+    </div >
   )
 }
 
