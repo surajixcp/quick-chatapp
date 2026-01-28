@@ -3,11 +3,16 @@ import User from "../models/User.js";
 import cloudinary from "../lib/cloudinary.js"
 import { io, userSocketMap } from "../server.js"
 
-// Get all users expcept the logged in user
-export const getUsersFortSidebar = async (req, res) => {
+// Get all users except the logged in user
+export const getUsersForSidebar = async (req, res) => {
     try {
         const userId = req.user._id;
-        const filteredUsers = await User.find({ _id: { $ne: userId } }).select("-password")
+
+        // Fetch current user to get friends list
+        const currentUser = await User.findById(userId).populate('friends', '-password');
+
+        // filteredUsers are now just the friends
+        const filteredUsers = currentUser.friends || [];
 
         // count number of messages not seen
         const unseenMessages = {}
@@ -80,6 +85,18 @@ export const sendMessage = async (req, res) => {
         const { text, image, isForwarded } = req.body;
         const { id: receiverId } = req.params;
         const senderId = req.user._id;
+
+        // Check if blocked
+        const receiverUser = await User.findById(receiverId);
+        if (receiverUser.blockedUsers.includes(senderId)) {
+            return res.json({ success: false, message: "You are blocked by this user" });
+        }
+
+        // Check if sender blocked receiver (optional, usually you can't message someone you blocked)
+        const senderUser = await User.findById(senderId);
+        if (senderUser.blockedUsers.includes(receiverId)) {
+            return res.json({ success: false, message: "Unblock user to send message" });
+        }
 
         // Check if receiverId is a Group
         const isGroup = await import("../models/Group.js").then(m => m.default.findById(receiverId));

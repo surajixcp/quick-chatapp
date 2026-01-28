@@ -1,24 +1,21 @@
-import React from 'react'
-import Sidebar from '../components/Sidebar'
-import ChatContainer from '../components/ChatContainer'
-import RightSidebar from '../components/RightSidebar'
-import { useContext } from 'react'
-import { ChatContext } from '../../context/ChatContext'
-import { ThemeContext } from '../../context/ThemeContext'
+import MobileNavbar from '../components/MobileNavbar'
+import { AuthContext } from '../../context/AuthContext'
 
 const HomePage = () => {
 
   const { selectedUser } = useContext(ChatContext);
   const { theme, themes } = useContext(ThemeContext);
+  const { logout } = useContext(AuthContext);
   const [showRightSidebar, setShowRightSidebar] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState('chats'); // 'chats' or 'groups'
 
   return (
-    <div className={`w-full h-screen ${themes[theme] || themes.default} transition-colors duration-500`}>
-      <div className={`h-full grid grid-cols-1 overflow-hidden relative ${selectedUser ? (showRightSidebar ? 'lg:grid-cols-[1fr_2fr_1fr] md:grid-cols-[1fr_2fr]' : 'lg:grid-cols-[1fr_3fr] md:grid-cols-[1fr_2fr]') : 'md:grid-cols-[1fr_2fr]'}`}>
+    <div className={`w-full h-screen ${themes[theme] || themes.default} transition-colors duration-500 flex flex-col`}>
+      <div className={`flex-1 grid grid-cols-1 overflow-hidden relative ${selectedUser ? (showRightSidebar ? 'lg:grid-cols-[1fr_2fr_1fr] md:grid-cols-[1fr_2fr]' : 'lg:grid-cols-[1fr_3fr] md:grid-cols-[1fr_2fr]') : 'md:grid-cols-[1fr_2fr]'}`}>
 
         {/* Sidebar - specialized visibility logic handled inside Sidebar component or here */}
         <div className={`${selectedUser ? 'max-md:hidden' : 'w-full'} flex flex-col border-r border-gray-700 bg-[#282142]/30`}>
-          <Sidebar />
+          <Sidebar activeTab={activeTab} />
         </div>
 
         {/* ChatContainer */}
@@ -33,6 +30,15 @@ const HomePage = () => {
           </div>
         )}
       </div>
+
+      {/* Mobile Navigation */}
+      {!selectedUser && (
+        <MobileNavbar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onLogout={logout}
+        />
+      )}
     </div>
   )
 }

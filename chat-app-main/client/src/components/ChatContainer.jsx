@@ -5,6 +5,8 @@ import { AuthContext } from '../../context/AuthContext'
 import { ChatContext } from '../../context/ChatContext'
 import toast from 'react-hot-toast'
 import EmojiPicker from 'emoji-picker-react'
+import ForwardModal from './ForwardModal'
+import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info } from 'lucide-react'
 
 const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
@@ -79,14 +81,42 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
   return selectedUser ? (
     <div className='h-full flex flex-col relative backdrop-blur-lg overflow-hidden'>
+      {/* Animated Background Layer */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+        {/* Bubbles */}
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="animate-bubble bg-gradient-to-t from-white/5 to-transparent rounded-full blur-2xl"
+            style={{
+              left: `${Math.random() * 100}%`,
+              width: `${Math.random() * 150 + 50}px`,
+              aspectRatio: '1/1',
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${Math.random() * 10 + 15}s`
+            }}
+          />
+        ))}
+        {/* Floating Emojis */}
+        <div className="absolute inset-0 opacity-[0.03] flex justify-around items-end pb-20">
+          <span className="text-8xl animate-float" style={{ animationDelay: '0s' }}>💬</span>
+          <span className="text-9xl animate-float" style={{ animationDelay: '2s' }}>🌊</span>
+          <span className="text-8xl animate-float" style={{ animationDelay: '4s' }}>✨</span>
+        </div>
+      </div>
+
       {/* ----------header----------------- */}
-      <div className='flex-none flex items-center gap-3 py-3 mx-4 border-b border-b border-stone-500'>
-        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-8 rounded-full' />
-        <p className='flex-1 text-lg text-white flex items-center gap-2'>{selectedUser?.fullName}
-          {onlineUsers.includes(selectedUser._id) && <span className='w-2 h-2 rounded-full bg-green-500'></span>}
+      <div className='flex-none flex items-center gap-3 py-3 mx-4 border-b border-white/10 relative z-10'>
+        <button onClick={() => setSelectedUser(null)} className='md:hidden p-2 hover:bg-white/10 rounded-full transition-colors'>
+          <ArrowLeft className="w-6 h-6 text-white" />
+        </button>
+
+        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/20' />
+        <p className='flex-1 text-lg text-white font-medium flex items-center gap-2'>{selectedUser?.fullName}
+          {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
         </p>
-        <img onClick={() => setSelectedUser(null)} src={assets.arrow_icon} alt="" className='md:hidden max-w-7' />
-        <img src={assets.help_icon} onClick={() => setShowRightSidebar(!showRightSidebar)} alt="" className='max-md:hidden max-w-5 cursor-pointer hover:scale-110 transition-all' />
+
+        <button onClick={() => setShowRightSidebar(!showRightSidebar)} className='p-2 hover:bg-white/10 rounded-full transition-colors' title="Chat Info">
+          <Info className="w-6 h-6 text-white/90" />
+        </button>
       </div>
 
       {/*----------------Chat area---------------------  */}
@@ -134,12 +164,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-3 p-3'>
-        <div className='flex-1 flex items-center bg-gray-100/12 px-3 rounded-full relative'>
+      <div className='flex-none flex items-center gap-3 p-4 relative z-10'>
+        <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full relative shadow-lg'>
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
-            <div className="absolute bottom-12 left-0 z-50">
+            <div className="absolute bottom-16 left-0 z-50 shadow-2xl rounded-xl overflow-hidden border border-white/10">
               <EmojiPicker
                 theme="dark"
                 onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
@@ -149,9 +179,9 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="mr-2 text-xl hover:scale-110 transition-transform"
+            className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
           >
-            😊
+            <Smile className="w-6 h-6" />
           </button>
 
           <input
@@ -159,15 +189,17 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             value={input}
             onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
             type="text"
-            placeholder='Send a message'
-            className='flex-1 text-sm p-3 border-none rounded-lg outline-none text-white placeholder-gray-400 bg-transparent'
+            placeholder='Type a message...'
+            className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
           />
           <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
-          <label htmlFor='image'>
-            <img src={assets.gallery_icon} alt="" className='w-5 mr-2 cursor-pointer' />
+          <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all">
+            <ImagePlus className="w-6 h-6" />
           </label>
         </div>
-        <img onClick={handleSendMessage} src={assets.send_button} alt="" className='w-7 cursor-pointer' />
+        <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
+          <SendHorizontal className="w-5 h-5 text-white" />
+        </button>
       </div>
 
       {showForwardModal && (

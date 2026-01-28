@@ -62,7 +62,8 @@ io.on("connection", (socket) => {
 })
 
 // Middleware setup
-app.use(express.json({ limit: "4mb" }))
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true,
@@ -73,6 +74,12 @@ app.use("/api/status", (req, res) => res.send("Server is live"));
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/groups", groupRouter);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("Unhandled Server Error:", err);
+    res.status(500).json({ success: false, message: "Internal Server Error", error: err.message });
+});
 
 // Connect to MongoDB
 await connectDB();

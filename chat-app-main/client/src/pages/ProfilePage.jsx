@@ -34,6 +34,17 @@ const ProfilePage = () => {
       <div className='w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>
           <h3 className='text-lg'>Profile details</h3>
+          <div className='flex items-center gap-2'>
+            <img src={assets.logo_icon} className='w-4 h-4 opacity-50' alt="User" />
+            <p className='text-sm font-light'>{authUser.fullName}</p>
+          </div>
+          <div className='flex items-center gap-2'>
+            <p className='text-xs text-violet-300 bg-violet-900/30 px-2 py-1 rounded'>ID: @{authUser.username || 'user'}</p>
+          </div>
+          <div className='flex items-center gap-2'>
+            <span className="text-gray-500 text-xs">Email:</span>
+            <p className='text-sm font-light'>{authUser.email}</p>
+          </div>
           <label htmlFor='avatar' className='flex items-center gap-3 cursor-pointer'>
             <input onChange={(e) => setSelectedImg(e.target.files[0])} type="file" id='avatar' accept='.png, .jpg, .jpeg' hidden />
             <img src={selectedImg ? URL.createObjectURL(selectedImg) : assets.avatar_icon} alt="" className={`w-12 h-12 ${selectedImg && 'rounded-full'}`} />
