@@ -24,15 +24,18 @@ const App = () => {
 
   return (
     <div
-      className="bg-cover min-h-screen"
+      className="bg-cover min-h-screen relative overflow-x-hidden"
       style={{ backgroundImage: `url(${bgImage})`, backgroundAttachment: 'fixed' }}
     >
-      <Toaster />
-      <Routes>
-        <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'} replace />} />
-        <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={'/'} replace />} />
-        <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to={'/login'} replace />} />
-      </Routes>
+      <div className="absolute inset-0 bg-black/40 z-0"></div>
+      <div className="relative z-10 w-full h-full">
+        <Toaster />
+        <Routes>
+          <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'} replace />} />
+          <Route path='/login' element={!authUser ? <LoginPage /> : <Navigate to={'/'} replace />} />
+          <Route path='/profile' element={authUser ? <ProfilePage /> : <Navigate to={'/login'} replace />} />
+        </Routes>
+      </div>
     </div>
   )
 }
