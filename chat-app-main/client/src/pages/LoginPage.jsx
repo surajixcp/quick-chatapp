@@ -21,11 +21,14 @@ const LoginPage = () => {
     login(currState === "Sign up" ? 'signup' : 'login', { fullName, email, password, bio })
   }
   return (
-    <div className='min-h-screen flex items-center justify-center p-4 gap-8 lg:gap-32 max-lg:flex-col'>
+    <div className='min-h-screen flex items-center justify-center p-4 gap-8 lg:gap-32 max-lg:flex-col relative overflow-hidden'>
+      {/* Background Glow Effect */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/30 rounded-full blur-[100px] -z-10 animate-pulse"></div>
+
       {/* ------------left--------------- */}
-      <div className='flex flex-col items-center gap-2 animate-float'>
-        <img src={assets.logo_big} alt="QuickChat Logo" className='w-[min(40vw,280px)]' />
-        <h1 className='text-4xl font-bold text-white tracking-tight'>QuickChat</h1>
+      <div className='flex flex-col items-center gap-4 animate-float z-10'>
+        <img src={assets.logo_icon} alt="QuickChat Logo" className='w-24 h-24 drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]' />
+        <h1 className='text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tight drop-shadow-sm'>QuickChat</h1>
       </div>
       {/* ------------right--------------- */}
 
@@ -46,7 +49,7 @@ const LoginPage = () => {
               onChange={(e) => setFullName(e.target.value)}
               value={fullName}
               type="text"
-              className='p-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-white/10 transition-all placeholder:text-gray-600 outline-none'
+              className='p-4 bg-black/30 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-black/50 transition-all placeholder:text-gray-500 outline-none'
               placeholder='Enter your name'
               required
             />
@@ -61,7 +64,7 @@ const LoginPage = () => {
             type="email"
             placeholder='name@example.com'
             required
-            className='p-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-white/10 transition-all placeholder:text-gray-600 outline-none'
+            className='p-4 bg-black/30 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-black/50 transition-all placeholder:text-gray-500 outline-none'
           />
         </div>
 
@@ -73,7 +76,7 @@ const LoginPage = () => {
             type="password"
             placeholder='••••••••'
             required
-            className='p-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-white/10 transition-all placeholder:text-gray-600 outline-none'
+            className='p-4 bg-black/30 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-black/50 transition-all placeholder:text-gray-500 outline-none'
           />
         </div>
 
@@ -84,7 +87,7 @@ const LoginPage = () => {
               onChange={(e) => setBio(e.target.value)}
               value={bio}
               rows={3}
-              className='p-4 bg-white/5 border border-white/5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-white/10 transition-all placeholder:text-gray-600 outline-none resize-none'
+              className='p-4 bg-black/30 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:bg-black/50 transition-all placeholder:text-gray-500 outline-none resize-none'
               placeholder="Tell us a bit about yourself..."
             ></textarea>
           </div>
