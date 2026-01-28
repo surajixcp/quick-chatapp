@@ -24,7 +24,7 @@ const App = () => {
 
   return (
     <div
-      className="bg-contain min-h-screen"
+      className="bg-cover min-h-screen"
       style={{ backgroundImage: `url(${bgImage})`, backgroundAttachment: 'fixed' }}
     >
       <Toaster />
