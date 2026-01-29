@@ -147,9 +147,9 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   {msg.image ? (
                     <img src={msg.image} alt='' className='max-w-[280px] md:max-w-sm border-4 border-white/10 rounded-2xl overflow-hidden mb-2 shadow-2xl hover:scale-[1.01] transition-transform' />
                   ) : (
-                    <p className={`p-3 px-5 max-w-[280px] md:max-w-md md:text-[15px] font-normal shadow-md mb-2 break-words leading-relaxed ${msg.senderId == authUser._id
-                      ? 'bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl rounded-tr-sm text-white shadow-violet-900/20'
-                      : 'bg-white/10 backdrop-blur-md rounded-2xl rounded-tl-sm text-gray-100 border border-white/5 shadow-black/10'
+                    <p className={`p-3 px-5 max-w-[280px] md:max-w-md md:text-[15px] font-normal shadow-lg mb-2 break-words leading-relaxed ${msg.senderId == authUser._id
+                      ? 'bg-gradient-to-br from-violet-600/90 to-indigo-900/90 rounded-2xl rounded-tr-none text-white shadow-[0_0_15px_rgba(124,58,237,0.3)] border border-violet-500/20 backdrop-blur-sm'
+                      : 'bg-[#1a1a1a]/80 backdrop-blur-md rounded-2xl rounded-tl-none text-gray-100 border border-white/10 shadow-lg'
                       }`}>{msg.text}</p>
                   )}
                 </div>

@@ -18,7 +18,36 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = React.useState('chats'); // 'chats' or 'groups'
 
   return (
-    <div className={`w-full h-screen ${themes[theme] || themes.default} transition-colors duration-500 flex flex-col`}>
+    <div className={`w-full h-screen ${themes[theme] || themes.default} transition-colors duration-500 flex flex-col relative overflow-hidden`}>
+      {/* Starry Background Effect */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[url('/bg-stars.png')] opacity-30 animate-pulse"></div> {/* Fallback/Simple texture if needed, or just CSS particles */}
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute bg-white rounded-full opacity-0"
+            initial={{
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+              scale: Math.random() * 0.5 + 0.5,
+              opacity: Math.random() * 0.5 + 0.2
+            }}
+            animate={{
+              y: [null, Math.random() * -100],
+              opacity: [null, 0],
+            }}
+            transition={{
+              duration: Math.random() * 10 + 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            style={{
+              width: Math.random() * 4 + 1 + 'px',
+              height: Math.random() * 4 + 1 + 'px',
+            }}
+          />
+        ))}
+      </div>
       <div className={`flex-1 grid grid-cols-1 overflow-hidden relative ${selectedUser ? (showRightSidebar ? 'lg:grid-cols-[1fr_2fr_1fr] md:grid-cols-[1fr_2fr]' : 'lg:grid-cols-[1fr_3fr] md:grid-cols-[1fr_2fr]') : 'md:grid-cols-[1fr_2fr]'}`}>
 
         {/* Sidebar - specialized visibility logic handled inside Sidebar component or here */}
