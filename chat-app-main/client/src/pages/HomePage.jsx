@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { motion } from 'framer-motion'
 import Sidebar from '../components/Sidebar'
 import ChatContainer from '../components/ChatContainer'
 import RightSidebar from '../components/RightSidebar'
@@ -28,13 +29,22 @@ const HomePage = () => {
         {/* ChatContainer */}
         <div className={`${!selectedUser ? 'max-md:hidden' : 'w-full'} flex flex-col relative h-full overflow-hidden`}>
           {selectedUser ? <ChatContainer showRightSidebar={showRightSidebar} setShowRightSidebar={setShowRightSidebar} /> : (
-            <div className='flex flex-col items-center justify-center h-full gap-4 text-gray-500 bg-black/20 backdrop-blur-sm transition-all animate-fade-in-up'>
-              <div className='p-6 bg-white/5 rounded-full mb-2 animate-pulse'>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className='flex flex-col items-center justify-center h-full gap-4 text-gray-500 bg-black/20 backdrop-blur-sm transition-all'
+            >
+              <motion.div
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className='p-6 bg-white/5 rounded-full mb-2'
+              >
                 <img src={assets.logo_icon} alt="" className='max-w-16 opacity-50' />
-              </div>
+              </motion.div>
               <p className='text-xl font-medium text-white/80 tracking-wide'>Chat anytime, anywhere</p>
               <p className='text-sm text-gray-500'>Select a connection to start messaging</p>
-            </div>
+            </motion.div>
           )}
         </div>
 
