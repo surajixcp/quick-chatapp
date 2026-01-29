@@ -18,10 +18,10 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = React.useState('chats'); // 'chats' or 'groups'
 
   return (
-    <div className={`w-full h-screen ${themes[theme] || themes.default} transition-colors duration-500 flex flex-col relative overflow-hidden`}>
+    <div className={`w-full h-screen ${themes[theme] || themes.default} transition-colors duration-500 overflow-hidden relative`}>
       {/* Starry Background Effect */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[url('/bg-stars.png')] opacity-30 animate-pulse"></div> {/* Fallback/Simple texture if needed, or just CSS particles */}
+        <div className="absolute inset-0 bg-[url('/bg-stars.png')] opacity-30 animate-pulse"></div>
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
@@ -48,43 +48,49 @@ const HomePage = () => {
           />
         ))}
       </div>
-      <div className={`flex-1 grid grid-cols-1 overflow-hidden relative ${selectedUser ? (showRightSidebar ? 'lg:grid-cols-[1fr_2fr_1fr] md:grid-cols-[1fr_2fr]' : 'lg:grid-cols-[1fr_3fr] md:grid-cols-[1fr_2fr]') : 'md:grid-cols-[1fr_2fr]'}`}>
 
-        {/* Sidebar - specialized visibility logic handled inside Sidebar component or here */}
-        {/* Sidebar */}
-        <div className={`${selectedUser ? 'max-md:hidden' : 'w-full'} flex flex-col border-r border-white/10 bg-black/20 backdrop-blur-xl`}>
+      <div className="relative z-10 w-full h-full p-2 sm:p-4 md:p-6 lg:p-8 flex gap-4 md:gap-6 wrapper-container max-w-[1920px] mx-auto">
+
+        {/* Sidebar Panel */}
+        <div className={`${selectedUser ? 'max-md:hidden' : 'w-full'} md:w-[320px] lg:w-[380px] flex-shrink-0 flex flex-col bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-300`}>
           <Sidebar activeTab={activeTab} />
         </div>
 
-        {/* ChatContainer */}
-        <div className={`${!selectedUser ? 'max-md:hidden' : 'w-full'} flex flex-col relative h-full overflow-hidden`}>
+        {/* Chat Panel */}
+        <div className={`${!selectedUser ? 'max-md:hidden' : 'w-full'} flex-1 flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl`}>
           {selectedUser ? <ChatContainer showRightSidebar={showRightSidebar} setShowRightSidebar={setShowRightSidebar} /> : (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className='flex flex-col items-center justify-center h-full gap-4 text-gray-500 bg-black/20 backdrop-blur-sm transition-all'
+              className='flex flex-col items-center justify-center h-full gap-6 text-gray-500 bg-black/20 backdrop-blur-sm'
             >
-              <motion.div
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className='p-6 bg-white/5 rounded-full mb-2'
-              >
-                <img src={assets.logo_icon} alt="" className='max-w-16 opacity-50' />
-              </motion.div>
-              <p className='text-xl font-medium text-white/80 tracking-wide'>Chat anytime, anywhere</p>
-              <p className='text-sm text-gray-500'>Select a connection to start messaging</p>
+              <div className="p-8 bg-white/5 rounded-full relative">
+                <div className="absolute inset-0 bg-violet-500/20 rounded-full blur-xl animate-pulse"></div>
+                <img src={assets.logo_icon} alt="" className='w-20 opacity-60 relative z-10' />
+              </div>
+              <div className="text-center space-y-2">
+                <p className='text-2xl font-bold text-white/90 tracking-tight'>Chat anytime, anywhere</p>
+                <p className='text-sm text-gray-400 font-medium'>Select a connection to start messaging</p>
+              </div>
             </motion.div>
           )}
         </div>
 
-        {/* RightSidebar */}
-        {(selectedUser && showRightSidebar) && (
-          <div className={`border-l border-white/10 bg-black/40 backdrop-blur-xl max-md:fixed max-md:inset-0 md:max-lg:absolute md:max-lg:right-0 md:max-lg:top-0 md:max-lg:bottom-0 md:max-lg:w-[300px] lg:z-10 max-md:z-50 md:max-lg:z-20 transition-all`}>
-            <RightSidebar onClose={() => setShowRightSidebar(false)} />
-          </div>
-        )}
+        {/* Right Sidebar Panel */}
+        <div className={`
+          ${(selectedUser && showRightSidebar) ? 'w-[320px] lg:w-[360px] opacity-100 scale-100' : 'w-0 opacity-0 scale-95 hidden'} 
+          max-md:fixed max-md:inset-4 max-md:z-50 max-md:w-auto 
+          flex-shrink-0 flex flex-col bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-300 origin-right
+        `}>
+          {(selectedUser && showRightSidebar) && <RightSidebar onClose={() => setShowRightSidebar(false)} />}
+        </div>
       </div>
+
+      {/* Overlay for mobile right sidebar */}
+      {(selectedUser && showRightSidebar) && (
+        <div className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setShowRightSidebar(false)}></div>
+      )}
 
       {/* Mobile Navigation */}
       {!selectedUser && (

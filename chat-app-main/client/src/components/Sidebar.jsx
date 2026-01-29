@@ -104,13 +104,13 @@ const Sidebar = ({ activeTab }) => {
             <div>
               <p className="text-gray-500 text-[11px] mb-3 pl-2 uppercase font-bold tracking-widest">Connections</p>
               {filteredUsers.length > 0 ? (
-                <div className="space-y-2 px-2">
+                <div className="space-y-1 px-2">
                   {filteredUsers.map((user, index) => (
                     <div
                       onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
                       key={index}
-                      className={`relative flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-3xl cursor-pointer transition-all duration-300 group max-sm:text-sm border border-transparent ${selectedUser?._id === user._id
-                        ? 'bg-white/10 border-white/5 shadow-xl backdrop-blur-md'
+                      className={`relative flex items-center gap-3 p-2.5 rounded-2xl cursor-pointer transition-all duration-300 group max-sm:text-sm border border-transparent ${selectedUser?._id === user._id
+                        ? 'bg-white/10 border-white/5 shadow-lg backdrop-blur-md'
                         : 'hover:bg-white/5 hover:border-white/5'
                         }`}
                     >
@@ -118,23 +118,23 @@ const Sidebar = ({ activeTab }) => {
                         <img
                           src={user?.profilePic || assets.avatar_icon}
                           alt=""
-                          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 shadow-sm transition-transform duration-300 ${selectedUser?._id === user._id ? 'border-violet-400 scale-105' : 'border-transparent group-hover:scale-105'}`}
+                          className={`w-10 h-10 rounded-full object-cover border-2 shadow-sm transition-transform duration-300 ${selectedUser?._id === user._id ? 'border-violet-400 scale-105' : 'border-transparent group-hover:scale-105'}`}
                         />
                         {onlineUsers.includes(user._id) && (
-                          <span className="absolute bottom-0.5 right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-[#100b21] rounded-full shadow-sm"></span>
+                          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#100b21] rounded-full shadow-sm"></span>
                         )}
                       </div>
 
                       <div className='flex flex-col flex-1 min-w-0'>
                         <div className="flex justify-between items-center">
-                          <p className={`font-semibold text-[15px] truncate ${selectedUser?._id === user._id ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>{user.fullName}</p>
+                          <p className={`font-semibold text-sm truncate ${selectedUser?._id === user._id ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>{user.fullName}</p>
                           {onlineUsers.includes(user._id) && selectedUser?._id !== user._id && (
-                            <span className="text-[10px] items-center gap-1 text-green-400 font-medium hidden group-hover:flex">
-                              Online
+                            <span className="text-[9px] items-center gap-1 text-green-400 font-medium hidden group-hover:flex">
+                              On
                             </span>
                           )}
                         </div>
-                        <p className={`text-xs truncate ${selectedUser?._id === user._id ? 'text-violet-300/80' : 'text-gray-500 group-hover:text-gray-400'}`}>
+                        <p className={`text-[11px] truncate ${selectedUser?._id === user._id ? 'text-violet-200' : 'text-gray-500 group-hover:text-gray-400'}`}>
                           {user.bio || "Available"}
                         </p>
                       </div>
