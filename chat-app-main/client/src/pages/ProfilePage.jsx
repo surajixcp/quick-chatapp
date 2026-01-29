@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { motion } from 'framer-motion'
 import assets from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -34,7 +35,12 @@ const ProfilePage = () => {
       {/* Background Glow - Fixed to match Login */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10 animate-pulse pointer-events-none"></div>
 
-      <div className='w-full max-w-4xl bg-white/5 backdrop-blur-2xl text-white border border-white/10 flex max-md:flex-col-reverse rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden animate-fade-in-up relative z-10 transition-all duration-500 hover:shadow-[0_0_80px_rgba(124,58,237,0.15)]'>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className='w-full max-w-4xl bg-white/5 backdrop-blur-2xl text-white border border-white/10 flex max-md:flex-col-reverse rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden relative z-10 transition-all duration-500 hover:shadow-[0_0_80px_rgba(124,58,237,0.15)]'
+      >
 
         {/* Form Section */}
         <form onSubmit={handleSubmit} className='flex flex-col gap-6 p-8 md:p-12 flex-1 relative'>
@@ -116,7 +122,7 @@ const ProfilePage = () => {
             <span>Delete Account</span>
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }

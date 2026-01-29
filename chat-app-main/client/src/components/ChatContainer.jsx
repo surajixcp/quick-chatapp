@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import assets from '../assets/assets'
 import { formatMessageTime } from '../lib/utils'
 import { AuthContext } from '../../context/AuthContext'
@@ -125,8 +126,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       {/*----------------Chat area---------------------  */}
       <div className='flex-1 overflow-y-auto p-4 pb-6 flex flex-col gap-2 custom-scrollbar'>
         {messages.map((msg, index) => (
-          <div key={index} className={`flex items-end gap-2 justify-end group relative ${msg.senderId !== authUser._id && 'flex-row-reverse'}`}
-            style={{ opacity: 0, animation: 'fade-in-up 0.3s ease-out forwards' }} // Simple inline animation to avoid motion prop issues if library not fully ready
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`flex items-end gap-2 justify-end group relative ${msg.senderId !== authUser._id && 'flex-row-reverse'}`}
           >
             {msg.isDeletedForEveryone ? (
               <p className='p-3 px-4 max-w-[200px] md:text-sm font-light rounded-2xl mb-2 italic text-gray-400 bg-white/5 border border-white/5 backdrop-blur-sm'>This message was deleted</p>
@@ -148,7 +153,11 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
                 {/* Delete Options */}
                 {selectedMessageId === msg._id && (
-                  <div className={`absolute top-full mt-1 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 text-gray-200 text-xs rounded-xl shadow-2xl z-50 p-1.5 flex flex-col gap-1 min-w-[140px] overflow-hidden transform origin-top scale-100 animate-fade-in-up`}>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className={`absolute top-full mt-1 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 text-gray-200 text-xs rounded-xl shadow-2xl z-50 p-1.5 flex flex-col gap-1 min-w-[140px] overflow-hidden transform origin-top`}
+                  >
                     <button onClick={() => handleCopy(msg)} className='hover:bg-white/10 p-2.5 rounded-lg text-left whitespace-nowrap transition-colors flex items-center gap-2 font-medium'>
                       {msg.image ? "Copy Media" : "Copy Text"}
                     </button>
@@ -157,7 +166,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                     {msg.senderId === authUser._id && (
                       <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-white/10 p-2.5 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10 font-medium'>Delete for everyone</button>
                     )}
-                  </div>
+                  </motion.div>
                 )}
               </>
             )}
@@ -166,7 +175,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
               {/* Moved time to be more subtle */}
               <span>{formatMessageTime(msg.createdAt)}</span>
             </div>
-          </div>
+          </motion.div>
         ))}
         <div ref={scrollEnd}></div>
 
@@ -178,7 +187,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
-            <div className="absolute bottom-20 left-0 z-50 shadow-[0_0_40px_rgba(0,0,0,0.6)] rounded-3xl overflow-hidden border border-white/10 animate-fade-in-up bg-[#1a1a1a]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="absolute bottom-20 left-0 z-50 shadow-[0_0_40px_rgba(0,0,0,0.6)] rounded-3xl overflow-hidden border border-white/10 bg-[#1a1a1a]"
+            >
               <EmojiPicker
                 theme="dark"
                 onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
@@ -187,7 +201,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                 width={300}
                 height={350}
               />
-            </div>
+            </motion.div>
           )}
 
           <button
