@@ -49,65 +49,65 @@ const RightSidebar = ({ onClose }) => {
       </button>
 
       <div className='flex flex-col h-full'>
-        <div className='flex-1 overflow-y-auto custom-scrollbar p-6 px-8'>
-          <div className='flex flex-col items-center gap-4 text-xs font-light mx-auto pt-4'>
-            <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-28 h-28 rounded-full object-cover border-[3px] border-white/10 shadow-2xl p-1 bg-white/5' />
-            <div className='flex flex-col items-center text-center gap-1'>
-              <h1 className='text-xl font-bold flex items-center gap-2 text-white tracking-wide'>
+        <div className='flex-1 overflow-y-auto custom-scrollbar p-8 px-10'>
+          <div className='flex flex-col items-center gap-4 text-xs font-light mx-auto pt-6'>
+            <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-32 h-32 rounded-full object-cover border-4 border-white/10 shadow-2xl p-1 bg-white/5 hover:scale-105 transition-transform duration-500' />
+            <div className='flex flex-col items-center text-center gap-2'>
+              <h1 className='text-2xl font-bold flex items-center gap-2 text-white tracking-wide'>
                 {selectedUser?.fullName}
-                {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse'></span>}
+                {onlineUsers.includes(selectedUser._id) && <span className='w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)] animate-pulse'></span>}
               </h1>
-              <p className='text-gray-400 text-sm max-w-[220px] leading-relaxed'>{selectedUser.bio || "No bio available"}</p>
+              <p className='text-gray-400 text-sm max-w-[240px] leading-relaxed font-medium'>{selectedUser.bio || "No bio available"}</p>
             </div>
           </div>
 
-          <div className='h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-8'></div>
+          <div className='h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-10'></div>
 
-          <div className='space-y-6'>
+          <div className='space-y-10'>
             <div>
-              <div className='flex items-center gap-2 mb-4 text-gray-300'>
-                <Image className="w-4 h-4 text-violet-400" />
-                <p className='font-bold uppercase tracking-widest text-[11px] text-gray-400'>Shared Media</p>
+              <div className='flex items-center gap-3 mb-6 text-gray-300'>
+                <Image className="w-5 h-5 text-violet-400" />
+                <p className='font-bold uppercase tracking-widest text-xs text-gray-400'>Shared Media</p>
               </div>
               {msgImages.length > 0 ? (
-                <div className='grid grid-cols-3 gap-2 opacity-90'>
+                <div className='grid grid-cols-3 gap-3 opacity-90'>
                   {msgImages.map((url, index) => (
-                    <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded-xl overflow-hidden aspect-square border border-white/5 relative group'>
+                    <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded-2xl overflow-hidden aspect-square border border-white/5 relative group'>
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                       <img src={url} alt="" className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' />
                     </div>
                   ))}
                 </div>
-              ) : <p className='text-gray-600 text-sm italic pl-2'>No shared media</p>}
+              ) : <p className='text-gray-600 text-sm italic pl-2 border-l-2 border-white/5 ml-1 py-1'>No shared media</p>}
             </div>
 
             <div>
-              <div className='flex items-center gap-2 mb-4 text-gray-300'>
-                <Link className="w-4 h-4 text-violet-400" />
-                <p className='font-bold uppercase tracking-widest text-[11px] text-gray-400'>Shared Links</p>
+              <div className='flex items-center gap-3 mb-6 text-gray-300'>
+                <Link className="w-5 h-5 text-violet-400" />
+                <p className='font-bold uppercase tracking-widest text-xs text-gray-400'>Shared Links</p>
               </div>
               {msgLinks.length > 0 ? (
-                <div className='flex flex-col gap-2.5'>
+                <div className='flex flex-col gap-3'>
                   {msgLinks.map((link, index) => (
-                    <a key={index} href={link} target="_blank" rel="noopener noreferrer" className='truncate bg-white/5 hover:bg-white/10 p-3 rounded-xl text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-3 border border-white/5 group'>
-                      <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/30 transition-colors">
+                    <a key={index} href={link} target="_blank" rel="noopener noreferrer" className='truncate bg-white/5 hover:bg-white/10 p-4 rounded-2xl text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-4 border border-white/5 group shadow-sm'>
+                      <div className="w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/30 transition-colors">
                         <Link className="w-4 h-4" />
                       </div>
                       <span className='truncate text-sm font-medium opacity-90'>{link.replace(/^https?:\/\//, '')}</span>
                     </a>
                   ))}
                 </div>
-              ) : <p className='text-gray-600 text-sm italic pl-2'>No shared links</p>}
+              ) : <p className='text-gray-600 text-sm italic pl-2 border-l-2 border-white/5 ml-1 py-1'>No shared links</p>}
             </div>
 
             <div>
-              <p className='mb-4 font-bold text-[11px] text-gray-400 uppercase tracking-widest'>Appearance</p>
-              <div className='flex gap-3'>
+              <p className='mb-6 font-bold text-xs text-gray-400 uppercase tracking-widest pl-1'>Appearance</p>
+              <div className='flex gap-4 pl-1'>
                 {Object.keys(themes).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTheme(t)}
-                    className={`w-9 h-9 rounded-full border-2 ${theme === t ? 'border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'border-transparent opacity-50 hover:opacity-100'} transition-all duration-300 cursor-pointer relative`}
+                    className={`w-10 h-10 rounded-full border-2 ${theme === t ? 'border-white scale-110 shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'border-transparent opacity-50 hover:opacity-100'} transition-all duration-300 cursor-pointer relative`}
                     style={{ background: t === 'default' ? '#1e1e2d' : t === 'ocean' ? 'linear-gradient(135deg, #1e3a8a, #155e75)' : t === 'sunset' ? 'linear-gradient(135deg, #312e81, #4c1d95)' : 'linear-gradient(135deg, #111827, #064e3b)' }}
                     title={t.charAt(0).toUpperCase() + t.slice(1)}
                   >
@@ -118,8 +118,8 @@ const RightSidebar = ({ onClose }) => {
             </div>
 
             <div>
-              <p className='mb-4 font-bold text-[11px] text-gray-400 uppercase tracking-widest text-center'>Privacy & Support</p>
-              <div className='flex flex-col gap-3 items-center'>
+              <p className='mb-5 font-bold text-xs text-gray-400 uppercase tracking-widest text-center'>Privacy & Support</p>
+              <div className='flex flex-col gap-4 items-center'>
                 <button
                   onClick={async () => {
                     try {
