@@ -179,18 +179,13 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none p-4 pb-5 relative z-20 flex justify-center'>
-        <div className='w-full max-w-3xl flex items-center gap-3'>
-          <div className='flex-1 flex items-center bg-white/5 backdrop-blur-2xl border border-white/10 px-3 py-2 rounded-[2rem] relative shadow-lg focus-within:border-white/20 focus-within:bg-black/40 transition-all duration-300 group'>
+      <div className='flex-none p-4 bg-black/20 border-t border-white/5 relative z-20'>
+        <div className='flex items-center gap-3'>
+          <div className='flex-1 flex items-center bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl focus-within:border-violet-500/50 focus-within:bg-black/40 transition-all duration-300'>
 
             {/* Emoji Picker */}
             {showEmojiPicker && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                className="absolute bottom-16 left-0 z-50 shadow-[0_0_50px_rgba(0,0,0,0.6)] rounded-[1.5rem] overflow-hidden border border-white/10 bg-[#1a1a1a]"
-              >
+              <div className="absolute bottom-20 left-4 z-50 shadow-2xl rounded-2xl overflow-hidden border border-white/10 bg-[#1a1a1a]">
                 <EmojiPicker
                   theme="dark"
                   onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
@@ -199,14 +194,14 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   width={300}
                   height={350}
                 />
-              </motion.div>
+              </div>
             )}
 
             <button
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className={`p-2.5 rounded-full transition-all duration-300 ${showEmojiPicker ? 'text-yellow-400 bg-white/10' : 'text-gray-400 hover:text-yellow-400 hover:bg-white/5'}`}
+              className={`p-2 rounded-full transition-colors ${showEmojiPicker ? 'text-yellow-400' : 'text-gray-400 hover:text-white'}`}
             >
-              <Smile className="w-5 h-5" />
+              <Smile className="w-6 h-6" />
             </button>
 
             <input
@@ -215,15 +210,15 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
               onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
               type="text"
               placeholder='Type a message...'
-              className='flex-1 text-sm px-3 py-2 border-none outline-none text-white placeholder-gray-500 bg-transparent font-medium tracking-wide'
+              className='flex-1 text-base px-3 bg-transparent border-none outline-none text-white placeholder-gray-500 font-normal'
             />
             <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
-            <label htmlFor='image' className="p-2.5 cursor-pointer text-gray-400 hover:text-violet-400 hover:bg-white/5 rounded-full transition-all">
-              <ImagePlus className="w-5 h-5" />
+            <label htmlFor='image' className="p-2 cursor-pointer text-gray-400 hover:text-violet-400 transition-colors">
+              <ImagePlus className="w-6 h-6" />
             </label>
           </div>
-          <button onClick={handleSendMessage} className='p-3.5 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:scale-105 transition-all duration-300 active:scale-95 group border border-white/10 shadow-xl flex-shrink-0'>
-            <SendHorizontal className="w-5 h-5 text-white group-hover:rotate-12 transition-transform duration-300" />
+          <button onClick={handleSendMessage} className='p-3.5 bg-violet-600 rounded-xl hover:bg-violet-700 transition-colors shadow-lg active:scale-95'>
+            <SendHorizontal className="w-6 h-6 text-white" />
           </button>
         </div>
       </div>

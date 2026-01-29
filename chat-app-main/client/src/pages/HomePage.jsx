@@ -49,22 +49,18 @@ const HomePage = () => {
         ))}
       </div>
 
-      <div className="relative z-10 w-full h-full p-2 sm:p-4 md:p-6 lg:p-8 flex gap-4 md:gap-6 wrapper-container max-w-[1920px] mx-auto">
+      {/* Main Grid Layout - Full Width/Height */}
+      <div className={`relative z-10 w-full h-full flex overflow-hidden backdrop-blur-sm`}>
 
-        {/* Sidebar Panel */}
-        <div className={`${selectedUser ? 'max-md:hidden' : 'w-full'} md:w-[320px] lg:w-[380px] flex-shrink-0 flex flex-col bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-300`}>
+        {/* Sidebar - Fixed width on Desktop */}
+        <div className={`${selectedUser ? 'max-md:hidden' : 'w-full'} md:w-[320px] lg:w-[380px] flex-shrink-0 flex flex-col border-r border-white/10 bg-black/20`}>
           <Sidebar activeTab={activeTab} />
         </div>
 
-        {/* Chat Panel */}
-        <div className={`${!selectedUser ? 'max-md:hidden' : 'w-full'} flex-1 flex flex-col relative overflow-hidden bg-black/20 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl`}>
+        {/* Chat Area - Flexible width */}
+        <div className={`${!selectedUser ? 'max-md:hidden' : 'w-full'} flex-1 flex flex-col relative overflow-hidden bg-black/10`}>
           {selectedUser ? <ChatContainer showRightSidebar={showRightSidebar} setShowRightSidebar={setShowRightSidebar} /> : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className='flex flex-col items-center justify-center h-full gap-6 text-gray-500 bg-black/20 backdrop-blur-sm'
-            >
+            <div className='flex flex-col items-center justify-center h-full gap-6 text-gray-500'>
               <div className="p-8 bg-white/5 rounded-full relative">
                 <div className="absolute inset-0 bg-violet-500/20 rounded-full blur-xl animate-pulse"></div>
                 <img src={assets.logo_icon} alt="" className='w-20 opacity-60 relative z-10' />
@@ -73,24 +69,19 @@ const HomePage = () => {
                 <p className='text-2xl font-bold text-white/90 tracking-tight'>Chat anytime, anywhere</p>
                 <p className='text-sm text-gray-400 font-medium'>Select a connection to start messaging</p>
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
 
-        {/* Right Sidebar Panel */}
+        {/* Right Sidebar - Collapsible */}
         <div className={`
-          ${(selectedUser && showRightSidebar) ? 'w-[320px] lg:w-[360px] opacity-100 scale-100' : 'w-0 opacity-0 scale-95 hidden'} 
-          max-md:fixed max-md:inset-4 max-md:z-50 max-md:w-auto 
-          flex-shrink-0 flex flex-col bg-black/30 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden transition-all duration-300 origin-right
+          ${(selectedUser && showRightSidebar) ? 'w-[320px] lg:w-[360px] border-l border-white/10' : 'w-0 hidden'} 
+          max-md:fixed max-md:inset-0 max-md:z-50 max-md:w-full
+          flex-shrink-0 flex flex-col bg-black/20 transition-all duration-300
         `}>
           {(selectedUser && showRightSidebar) && <RightSidebar onClose={() => setShowRightSidebar(false)} />}
         </div>
       </div>
-
-      {/* Overlay for mobile right sidebar */}
-      {(selectedUser && showRightSidebar) && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onClick={() => setShowRightSidebar(false)}></div>
-      )}
 
       {/* Mobile Navigation */}
       {!selectedUser && (
