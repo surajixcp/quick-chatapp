@@ -109,7 +109,7 @@ const Sidebar = ({ activeTab }) => {
                     <div
                       onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
                       key={index}
-                      className={`relative flex items-center gap-4 p-4 rounded-3xl cursor-pointer transition-all duration-300 group max-sm:text-sm border border-transparent ${selectedUser?._id === user._id
+                      className={`relative flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-3xl cursor-pointer transition-all duration-300 group max-sm:text-sm border border-transparent ${selectedUser?._id === user._id
                         ? 'bg-white/10 border-white/5 shadow-xl backdrop-blur-md'
                         : 'hover:bg-white/5 hover:border-white/5'
                         }`}
@@ -118,10 +118,10 @@ const Sidebar = ({ activeTab }) => {
                         <img
                           src={user?.profilePic || assets.avatar_icon}
                           alt=""
-                          className={`w-11 h-11 rounded-full object-cover border-2 shadow-sm transition-transform duration-300 ${selectedUser?._id === user._id ? 'border-violet-400 scale-105' : 'border-transparent group-hover:scale-105'}`}
+                          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 shadow-sm transition-transform duration-300 ${selectedUser?._id === user._id ? 'border-violet-400 scale-105' : 'border-transparent group-hover:scale-105'}`}
                         />
                         {onlineUsers.includes(user._id) && (
-                          <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border-2 border-[#100b21] rounded-full shadow-sm"></span>
+                          <span className="absolute bottom-0.5 right-0.5 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 border-2 border-[#100b21] rounded-full shadow-sm"></span>
                         )}
                       </div>
 
