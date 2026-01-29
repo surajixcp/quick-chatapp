@@ -185,51 +185,53 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-2 sm:gap-4 p-3 sm:p-6 pb-4 sm:pb-8 relative z-20'>
-        <div className='flex-1 flex items-center bg-white/5 backdrop-blur-2xl border border-white/10 px-2 sm:px-3 py-2 sm:py-3 rounded-[2rem] relative shadow-lg focus-within:border-white/20 focus-within:bg-black/40 transition-all duration-300 group'>
+      <div className='flex-none p-4 pb-6 relative z-20 flex justify-center'>
+        <div className='w-full max-w-4xl flex items-center gap-2 sm:gap-4'>
+          <div className='flex-1 flex items-center bg-white/5 backdrop-blur-2xl border border-white/10 px-2 sm:px-4 py-2 sm:py-3 rounded-[2rem] relative shadow-lg focus-within:border-white/20 focus-within:bg-black/40 transition-all duration-300 group'>
 
-          {/* Emoji Picker */}
-          {showEmojiPicker && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="absolute bottom-20 sm:bottom-24 left-0 z-50 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 bg-[#1a1a1a]"
+            {/* Emoji Picker */}
+            {showEmojiPicker && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="absolute bottom-20 sm:bottom-24 left-0 z-50 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 bg-[#1a1a1a]"
+              >
+                <EmojiPicker
+                  theme="dark"
+                  onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
+                  skinTonesDisabled
+                  searchDisabled
+                  width={window.innerWidth < 640 ? 280 : 320}
+                  height={380}
+                />
+              </motion.div>
+            )}
+
+            <button
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className={`p-2 sm:p-3 rounded-full transition-all duration-300 ${showEmojiPicker ? 'text-yellow-400 bg-white/10' : 'text-gray-400 hover:text-yellow-400 hover:bg-white/5'}`}
             >
-              <EmojiPicker
-                theme="dark"
-                onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
-                skinTonesDisabled
-                searchDisabled
-                width={window.innerWidth < 640 ? 280 : 320}
-                height={380}
-              />
-            </motion.div>
-          )}
+              <Smile className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
 
-          <button
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className={`p-2 sm:p-3 rounded-full transition-all duration-300 ${showEmojiPicker ? 'text-yellow-400 bg-white/10' : 'text-gray-400 hover:text-yellow-400 hover:bg-white/5'}`}
-          >
-            <Smile className="w-5 h-5 sm:w-6 sm:h-6" />
+            <input
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
+              type="text"
+              placeholder='Type a message...'
+              className='flex-1 text-sm sm:text-[16px] px-2 sm:px-4 py-2 border-none outline-none text-white placeholder-gray-500 bg-transparent font-medium tracking-wide'
+            />
+            <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
+            <label htmlFor='image' className="p-2 sm:p-3 cursor-pointer text-gray-400 hover:text-violet-400 hover:bg-white/5 rounded-full transition-all">
+              <ImagePlus className="w-5 h-5 sm:w-6 sm:h-6" />
+            </label>
+          </div>
+          <button onClick={handleSendMessage} className='p-3 sm:p-4 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] hover:scale-105 transition-all duration-300 active:scale-95 group border border-white/10 shadow-xl flex-shrink-0'>
+            <SendHorizontal className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:rotate-12 transition-transform duration-300" />
           </button>
-
-          <input
-            onChange={(e) => setInput(e.target.value)}
-            value={input}
-            onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
-            type="text"
-            placeholder='Type a message...'
-            className='flex-1 text-sm sm:text-[16px] px-2 sm:px-4 py-2 border-none outline-none text-white placeholder-gray-500 bg-transparent font-medium tracking-wide'
-          />
-          <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
-          <label htmlFor='image' className="p-2 sm:p-3 cursor-pointer text-gray-400 hover:text-violet-400 hover:bg-white/5 rounded-full transition-all">
-            <ImagePlus className="w-5 h-5 sm:w-6 sm:h-6" />
-          </label>
         </div>
-        <button onClick={handleSendMessage} className='p-3 sm:p-5 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] hover:scale-105 transition-all duration-300 active:scale-95 group border border-white/10 shadow-xl'>
-          <SendHorizontal className="w-5 h-5 sm:w-7 sm:h-7 text-white group-hover:rotate-12 transition-transform duration-300" />
-        </button>
       </div>
 
       {showForwardModal && (

@@ -49,7 +49,7 @@ const RightSidebar = ({ onClose }) => {
       </button>
 
       <div className='flex flex-col h-full'>
-        <div className='flex-1 overflow-y-auto custom-scrollbar p-6'>
+        <div className='flex-1 overflow-y-auto custom-scrollbar p-6 px-8'>
           <div className='flex flex-col items-center gap-4 text-xs font-light mx-auto pt-4'>
             <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-28 h-28 rounded-full object-cover border-[3px] border-white/10 shadow-2xl p-1 bg-white/5' />
             <div className='flex flex-col items-center text-center gap-1'>

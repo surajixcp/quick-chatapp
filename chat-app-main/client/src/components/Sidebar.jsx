@@ -104,12 +104,12 @@ const Sidebar = ({ activeTab }) => {
             <div>
               <p className="text-gray-500 text-[11px] mb-3 pl-2 uppercase font-bold tracking-widest">Connections</p>
               {filteredUsers.length > 0 ? (
-                <div className="space-y-2">
+                <div className="space-y-2 px-2">
                   {filteredUsers.map((user, index) => (
                     <div
                       onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
                       key={index}
-                      className={`relative flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-3xl cursor-pointer transition-all duration-300 group max-sm:text-sm border border-transparent ${selectedUser?._id === user._id
+                      className={`relative flex items-center gap-3 sm:gap-4 p-3 sm:p-3.5 rounded-3xl cursor-pointer transition-all duration-300 group max-sm:text-sm border border-transparent ${selectedUser?._id === user._id
                         ? 'bg-white/10 border-white/5 shadow-xl backdrop-blur-md'
                         : 'hover:bg-white/5 hover:border-white/5'
                         }`}
