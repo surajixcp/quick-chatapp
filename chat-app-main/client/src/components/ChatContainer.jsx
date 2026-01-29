@@ -103,23 +103,26 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ----------header----------------- */}
-      <div className='flex-none flex items-center gap-3 py-4 px-6 mx-4 mt-2 mb-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl relative z-20 shadow-lg'>
+      {/* ----------header----------------- */}
+      <div className='flex-none flex items-center gap-4 py-5 px-8 mx-4 mt-4 mb-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] relative z-20 shadow-lg'>
         <button onClick={() => setSelectedUser(null)} className='md:hidden p-2 hover:bg-white/10 rounded-full transition-colors'>
           <ArrowLeft className="w-6 h-6 text-white" />
         </button>
 
-        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-12 h-12 rounded-full object-cover border-2 border-white/10 shadow-md transform hover:scale-105 transition-transform duration-300' />
-        <div className='flex-1 flex flex-col'>
-          <p className='text-lg text-white font-semibold flex items-center gap-2'>{selectedUser?.fullName}
-            {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse'></span>}
-          </p>
-          <p className='text-xs text-violet-200/70 font-medium tracking-wide'>
-            {onlineUsers.includes(selectedUser._id) ? 'Online' : 'Offline'}
+        <div className="relative">
+          <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-14 h-14 rounded-full object-cover border-[3px] border-white/10 shadow-md transform hover:scale-105 transition-transform duration-300' />
+          {onlineUsers.includes(selectedUser._id) && <span className='absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-[#1a1a1a] shadow-sm'></span>}
+        </div>
+
+        <div className='flex-1 flex flex-col gap-0.5'>
+          <p className='text-lg text-white font-bold flex items-center gap-2 tracking-wide'>{selectedUser?.fullName}</p>
+          <p className={`text-xs font-medium tracking-wider uppercase ${onlineUsers.includes(selectedUser._id) ? 'text-green-400' : 'text-gray-500'}`}>
+            {onlineUsers.includes(selectedUser._id) ? 'Active Now' : 'Offline'}
           </p>
         </div>
 
-        <button onClick={() => setShowRightSidebar(!showRightSidebar)} className='p-2 hover:bg-white/10 rounded-full transition-colors group' title="Chat Info">
-          <Info className="w-6 h-6 text-white/70 group-hover:text-white transition-colors" />
+        <button onClick={() => setShowRightSidebar(!showRightSidebar)} className='p-3 hover:bg-white/10 rounded-full transition-all duration-300 group border border-transparent hover:border-white/10' title="Chat Info">
+          <Info className="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" />
         </button>
       </div>
 
@@ -182,8 +185,8 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-4 p-4 pb-5 relative z-20'>
-        <div className='flex-1 flex items-center bg-white/5 backdrop-blur-2xl border border-white/10 px-2 py-2 rounded-full relative shadow-lg focus-within:border-violet-500/50 focus-within:bg-black/40 transition-all duration-300'>
+      <div className='flex-none flex items-center gap-4 p-6 pb-8 relative z-20'>
+        <div className='flex-1 flex items-center bg-white/5 backdrop-blur-2xl border border-white/10 px-3 py-3 rounded-[2rem] relative shadow-lg focus-within:border-white/20 focus-within:bg-black/40 transition-all duration-300 group'>
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
@@ -191,22 +194,22 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="absolute bottom-20 left-0 z-50 shadow-[0_0_40px_rgba(0,0,0,0.6)] rounded-3xl overflow-hidden border border-white/10 bg-[#1a1a1a]"
+              className="absolute bottom-24 left-0 z-50 shadow-[0_0_50px_rgba(0,0,0,0.5)] rounded-[2rem] overflow-hidden border border-white/10 bg-[#1a1a1a]"
             >
               <EmojiPicker
                 theme="dark"
                 onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
                 skinTonesDisabled
                 searchDisabled
-                width={300}
-                height={350}
+                width={320}
+                height={380}
               />
             </motion.div>
           )}
 
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="p-3 text-gray-400 hover:text-yellow-400 hover:bg-white/5 rounded-full transition-all"
+            className={`p-3 rounded-full transition-all duration-300 ${showEmojiPicker ? 'text-yellow-400 bg-white/10' : 'text-gray-400 hover:text-yellow-400 hover:bg-white/5'}`}
           >
             <Smile className="w-6 h-6" />
           </button>
@@ -217,15 +220,15 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
             type="text"
             placeholder='Type a message...'
-            className='flex-1 text-[15px] p-2 border-none outline-none text-white placeholder-gray-500 bg-transparent font-medium'
+            className='flex-1 text-[16px] px-4 py-2 border-none outline-none text-white placeholder-gray-500 bg-transparent font-medium tracking-wide'
           />
           <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
-          <label htmlFor='image' className="p-3 cursor-pointer text-gray-400 hover:text-blue-400 hover:bg-white/5 rounded-full transition-all">
+          <label htmlFor='image' className="p-3 cursor-pointer text-gray-400 hover:text-violet-400 hover:bg-white/5 rounded-full transition-all">
             <ImagePlus className="w-6 h-6" />
           </label>
         </div>
-        <button onClick={handleSendMessage} className='p-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:scale-105 transition-all duration-300 active:scale-95 group border border-white/10'>
-          <SendHorizontal className="w-6 h-6 text-white group-hover:translate-x-0.5 transition-transform" />
+        <button onClick={handleSendMessage} className='p-5 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] hover:scale-105 transition-all duration-300 active:scale-95 group border border-white/10 shadow-xl'>
+          <SendHorizontal className="w-7 h-7 text-white group-hover:rotate-12 transition-transform duration-300" />
         </button>
       </div>
 

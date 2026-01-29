@@ -48,119 +48,132 @@ const RightSidebar = ({ onClose }) => {
         <X className='w-5 h-5 text-white' />
       </button>
 
-      <div className='pt-12 flex flex-col items-center gap-4 text-xs font-light mx-auto'>
-        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-white/5 shadow-2xl' />
-        <div className='flex flex-col items-center'>
-          <h1 className='text-xl font-semibold flex items-center gap-2'>
-            {selectedUser?.fullName}
-            {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
-          </h1>
-          <p className='text-gray-400 mt-1 max-w-[200px] text-center'>{selectedUser.bio || "No bio available"}</p>
-        </div>
-      </div>
-      <hr className='border-gray-700/50 my-6 mx-5' />
+      <div className='flex flex-col h-full'>
+        <div className='flex-1 overflow-y-auto custom-scrollbar p-6'>
+          <div className='flex flex-col items-center gap-4 text-xs font-light mx-auto pt-4'>
+            <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-28 h-28 rounded-full object-cover border-[3px] border-white/10 shadow-2xl p-1 bg-white/5' />
+            <div className='flex flex-col items-center text-center gap-1'>
+              <h1 className='text-xl font-bold flex items-center gap-2 text-white tracking-wide'>
+                {selectedUser?.fullName}
+                {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse'></span>}
+              </h1>
+              <p className='text-gray-400 text-sm max-w-[220px] leading-relaxed'>{selectedUser.bio || "No bio available"}</p>
+            </div>
+          </div>
 
-      <div className='px-5 text-xs'>
-        <div className='flex items-center gap-2 mb-3 text-gray-300'>
-          <Image className="w-4 h-4" />
-          <p className='font-medium uppercase tracking-wide'>Media ({msgImages.length})</p>
-        </div>
-        {msgImages.length > 0 ? (
-          <div className='max-h-[150px] overflow-y-auto grid grid-cols-3 gap-2 opacity-80 mb-6'>
-            {msgImages.map((url, index) => (
-              <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded-lg overflow-hidden aspect-square border border-white/5'>
-                <img src={url} alt="" className='w-full h-full object-cover hover:scale-110 transition-transform duration-300' />
+          <div className='h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-8'></div>
+
+          <div className='space-y-6'>
+            <div>
+              <div className='flex items-center gap-2 mb-4 text-gray-300'>
+                <Image className="w-4 h-4 text-violet-400" />
+                <p className='font-bold uppercase tracking-widest text-[11px] text-gray-400'>Shared Media</p>
               </div>
-            ))}
+              {msgImages.length > 0 ? (
+                <div className='grid grid-cols-3 gap-2 opacity-90'>
+                  {msgImages.map((url, index) => (
+                    <div key={index} onClick={() => window.open(url)} className='cursor-pointer rounded-xl overflow-hidden aspect-square border border-white/5 relative group'>
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                      <img src={url} alt="" className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500' />
+                    </div>
+                  ))}
+                </div>
+              ) : <p className='text-gray-600 text-sm italic pl-2'>No shared media</p>}
+            </div>
+
+            <div>
+              <div className='flex items-center gap-2 mb-4 text-gray-300'>
+                <Link className="w-4 h-4 text-violet-400" />
+                <p className='font-bold uppercase tracking-widest text-[11px] text-gray-400'>Shared Links</p>
+              </div>
+              {msgLinks.length > 0 ? (
+                <div className='flex flex-col gap-2.5'>
+                  {msgLinks.map((link, index) => (
+                    <a key={index} href={link} target="_blank" rel="noopener noreferrer" className='truncate bg-white/5 hover:bg-white/10 p-3 rounded-xl text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-3 border border-white/5 group'>
+                      <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-500/30 transition-colors">
+                        <Link className="w-4 h-4" />
+                      </div>
+                      <span className='truncate text-sm font-medium opacity-90'>{link.replace(/^https?:\/\//, '')}</span>
+                    </a>
+                  ))}
+                </div>
+              ) : <p className='text-gray-600 text-sm italic pl-2'>No shared links</p>}
+            </div>
+
+            <div>
+              <p className='mb-4 font-bold text-[11px] text-gray-400 uppercase tracking-widest'>Appearance</p>
+              <div className='flex gap-3'>
+                {Object.keys(themes).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setTheme(t)}
+                    className={`w-9 h-9 rounded-full border-2 ${theme === t ? 'border-white scale-110 shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'border-transparent opacity-50 hover:opacity-100'} transition-all duration-300 cursor-pointer relative`}
+                    style={{ background: t === 'default' ? '#1e1e2d' : t === 'ocean' ? 'linear-gradient(135deg, #1e3a8a, #155e75)' : t === 'sunset' ? 'linear-gradient(135deg, #312e81, #4c1d95)' : 'linear-gradient(135deg, #111827, #064e3b)' }}
+                    title={t.charAt(0).toUpperCase() + t.slice(1)}
+                  >
+                    {theme === t && <span className="absolute inset-0 rounded-full border border-white/20 animate-ping"></span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className='mb-4 font-bold text-[11px] text-gray-400 uppercase tracking-widest'>Privacy & Support</p>
+              <div className='flex flex-col gap-3'>
+                <button
+                  onClick={async () => {
+                    try {
+                      const isBlocked = authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id);
+                      const endpoint = isBlocked ? '/api/auth/unblock' : '/api/auth/block';
+                      const { data } = await axios.post(endpoint, { id: selectedUser._id });
+
+                      if (data.success) {
+                        toast.success(data.message);
+                        window.location.reload();
+                      } else {
+                        toast.error(data.message);
+                      }
+                    } catch (error) {
+                      toast.error("Error updating block status");
+                    }
+                  }}
+                  className={`w-full py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 group ${authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/10 hover:border-red-500/30'}`}
+                >
+                  {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? <UserCheck className="w-4 h-4" /> : <Ban className="w-4 h-4 group-hover:scale-110 transition-transform" />}
+                  {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'Unblock User' : 'Block User'}
+                </button>
+
+                <button
+                  onClick={async () => {
+                    if (!window.confirm("Are you sure you want to remove this connection?")) return;
+                    try {
+                      const { data } = await axios.post('/api/auth/remove-friend', { id: selectedUser._id });
+                      if (data.success) {
+                        toast.success(data.message);
+                        window.location.reload();
+                      } else {
+                        toast.error(data.message);
+                      }
+                    } catch (error) {
+                      toast.error("Error removing friend");
+                    }
+                  }}
+                  className='w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 font-medium transition-all text-gray-300 flex items-center justify-center gap-2 border border-white/5 hover:border-white/10 group'
+                >
+                  <UserX className="w-4 h-4 group-hover:text-red-400 transition-colors" />
+                  <span className="group-hover:text-white transition-colors">Remove Connection</span>
+                </button>
+              </div>
+            </div>
           </div>
-        ) : <p className='text-gray-500 mb-6 italic pl-6'>No shared media</p>}
-
-        <div className='flex items-center gap-2 mb-3 text-gray-300'>
-          <Link className="w-4 h-4" />
-          <p className='font-medium uppercase tracking-wide'>Links ({msgLinks.length})</p>
-        </div>
-        {msgLinks.length > 0 ? (
-          <div className='max-h-[150px] overflow-y-auto flex flex-col gap-2 opacity-80 mb-6'>
-            {msgLinks.map((link, index) => (
-              <a key={index} href={link} target="_blank" rel="noopener noreferrer" className='truncate bg-white/5 p-2 rounded hover:bg-white/10 text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-2'>
-                <span className="w-1 h-1 rounded-full bg-blue-500"></span>
-                {link}
-              </a>
-            ))}
-          </div>
-        ) : <p className='text-gray-500 mb-6 italic pl-6'>No shared links</p>}
-
-      </div>
-
-      <div className='px-5 text-xs group'>
-        <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Themes</p>
-        <div className='flex gap-3 mb-6'>
-          {Object.keys(themes).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTheme(t)}
-              className={`w-8 h-8 rounded-full border-2 ${theme === t ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-60 hover:opacity-100'} transition-all duration-300 cursor-pointer`}
-              style={{ background: t === 'default' ? '#1e1e2d' : t === 'ocean' ? 'linear-gradient(135deg, #1e3a8a, #155e75)' : t === 'sunset' ? 'linear-gradient(135deg, #312e81, #4c1d95)' : 'linear-gradient(135deg, #111827, #064e3b)' }}
-              title={t.charAt(0).toUpperCase() + t.slice(1)}
-            />
-          ))}
         </div>
 
-        <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Actions</p>
-        <div className='flex flex-col gap-3 mb-4'>
-          {/* Block/Unblock Button */}
-          <button
-            onClick={async () => {
-              try {
-                const isBlocked = authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id);
-                const endpoint = isBlocked ? '/api/auth/unblock' : '/api/auth/block';
-                const { data } = await axios.post(endpoint, { id: selectedUser._id });
-
-                if (data.success) {
-                  toast.success(data.message);
-                  window.location.reload();
-                } else {
-                  toast.error(data.message);
-                }
-              } catch (error) {
-                toast.error("Error updating block status");
-              }
-            }}
-            className={`w-full py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20'}`}
-          >
-            {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? <UserCheck className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
-            {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'Unblock User' : 'Block User'}
-          </button>
-
-          {/* Remove Friend Button */}
-          <button
-            onClick={async () => {
-              if (!window.confirm("Are you sure you want to remove this connection?")) return;
-              try {
-                const { data } = await axios.post('/api/auth/remove-friend', { id: selectedUser._id });
-                if (data.success) {
-                  toast.success(data.message);
-                  window.location.reload(); // Refresh to update sidebar list
-                } else {
-                  toast.error(data.message);
-                }
-              } catch (error) {
-                toast.error("Error removing friend");
-              }
-            }}
-            className='w-full py-2.5 rounded-lg bg-white/5 hover:bg-white/10 font-medium transition-all text-gray-300 flex items-center justify-center gap-2 border border-white/5'
-          >
-            <UserX className="w-4 h-4" />
-            Remove Connection
+        <div className='p-6 border-t border-white/5 bg-[#120f1d]/50 backdrop-blur-md'>
+          <button onClick={() => logout()} className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-none text-sm font-bold py-3.5 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-[0.98] tracking-wide uppercase'>
+            <LogOut className="w-4 h-4" />
+            Logout Session
           </button>
         </div>
-      </div>
-
-      <div className='flex justify-center mt-6 mb-8'>
-        <button onClick={() => logout()} className='flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-none text-sm font-medium py-2.5 px-8 rounded-full cursor-pointer hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
-          <LogOut className="w-4 h-4" />
-          Logout
-        </button>
       </div>
 
     </div>
