@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import assets from '../assets/assets'
 import { AuthContext } from "../../context/AuthContext.jsx"
 import { motion } from 'framer-motion'
+import AnimatedBackground from '../components/AnimatedBackground'
 
 const LoginPage = () => {
 
@@ -21,13 +22,7 @@ const LoginPage = () => {
 
   return (
     <div className='min-h-screen flex items-center justify-center p-6 sm:p-12 relative overflow-hidden font-outfit'>
-      {/* Background - Deep Space Theme */}
-      <div className="fixed inset-0 bg-[#0f0c29] -z-20"></div>
-      <div className="fixed inset-0 bg-gradient-to-tr from-violet-900/20 via-[#302b63] to-[#24243e] -z-20"></div>
-
-      {/* Animated Orbs */}
-      <div className="fixed top-[-10%] left-[-10%] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10 animate-pulse pointer-events-none"></div>
-      <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] -z-10 animate-pulse pointer-events-none" style={{ animationDelay: '2s' }}></div>
+      <AnimatedBackground />
 
       <div className="flex items-center justify-center gap-16 xl:gap-32 w-full max-w-7xl z-10">
 

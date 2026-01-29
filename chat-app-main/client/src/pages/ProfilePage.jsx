@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import assets from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 const ProfilePage = () => {
 
@@ -32,13 +33,7 @@ const ProfilePage = () => {
 
   return (
     <div className='min-h-screen flex items-center justify-center p-4 relative overflow-hidden font-outfit'>
-      {/* Background - Fixed to match Theme */}
-      <div className="fixed inset-0 bg-[#0f0c29] -z-20"></div>
-      <div className="fixed inset-0 bg-gradient-to-tr from-violet-900/20 via-[#302b63] to-[#24243e] -z-20"></div>
-
-      {/* Animated Orbs */}
-      <div className="fixed top-[20%] left-[20%] w-[500px] h-[500px] bg-violet-600/30 rounded-full blur-[120px] -z-10 animate-pulse pointer-events-none mix-blend-screen"></div>
-      <div className="fixed bottom-[10%] right-[10%] w-[400px] h-[400px] bg-indigo-600/20 rounded-full blur-[100px] -z-10 animate-pulse pointer-events-none mix-blend-screen" style={{ animationDelay: '2s' }}></div>
+      <AnimatedBackground />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
