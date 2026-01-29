@@ -31,106 +31,129 @@ const Sidebar = ({ activeTab }) => {
     <div className={`h-full flex flex-col overflow-hidden text-white ${selectedUser ? "max-md:hidden" : ""}`}>
       <div className='p-5 pb-0 flex-1 overflow-y-auto custom-scrollbar'>
         <div className='pb-5'>
-          <div className='flex justify-between items-center'>
-            <img src={assets.logo} alt="" className='max-w-40' />
-            <div className='flex items-center gap-2'>
-              <button onClick={() => setShowAddFriend(true)} className='p-2 hover:bg-white/10 rounded-full transition-colors' title="Add Connection">
-                <UserPlus className="w-5 h-5 text-gray-300 hover:text-white" />
+          <div className='flex justify-between items-center mb-4'>
+            <img src={assets.logo} alt="" className='max-w-36 hover:opacity-90 transition-opacity cursor-pointer' />
+            <div className='flex items-center gap-1.5'>
+              <button onClick={() => setShowAddFriend(true)} className='p-2 hover:bg-white/10 rounded-full transition-all hover:scale-110' title="Add Connection">
+                <UserPlus className="w-5 h-5 text-gray-400 hover:text-white" />
               </button>
-              <button onClick={() => setShowCreateGroup(true)} className='p-2 hover:bg-white/10 rounded-full transition-colors' title="Create Group">
-                <Users className="w-5 h-5 text-gray-300 hover:text-white" />
+              <button onClick={() => setShowCreateGroup(true)} className='p-2 hover:bg-white/10 rounded-full transition-all hover:scale-110' title="Create Group">
+                <Users className="w-5 h-5 text-gray-400 hover:text-white" />
               </button>
               <div onClick={() => navigate('/profile')} className='relative group cursor-pointer ml-1'>
-                <img src={authUser?.profilePic || assets.avatar_icon} alt="" className='w-8 h-8 rounded-full object-cover border-2 border-transparent hover:border-violet-500 transition-all' title="My Profile" />
+                <div className="absolute inset-0 bg-violet-500 rounded-full blur-sm opacity-0 group-hover:opacity-40 transition-opacity"></div>
+                <img src={authUser?.profilePic || assets.avatar_icon} alt="" className='w-9 h-9 rounded-full object-cover border-2 border-transparent group-hover:border-violet-400 transition-all relative z-10' title="My Profile" />
               </div>
               <div className='relative py-2 group'>
-                <MoreVertical className='w-5 h-5 cursor-pointer text-gray-300 hover:text-white' />
-                <div className='absolute top-full right-0 z-20 w-32 p-1 rounded-2xl bg-[#1c1c1c]/90 backdrop-blur-xl border border-white/10 shadow-xl text-gray-100 hidden group-hover:block overflow-hidden'>
-                  <p onClick={() => navigate('/profile')} className='cursor-pointer text-sm p-3 hover:bg-white/10 transition-colors'>Edit Profile</p>
-                  <div className='h-[1px] bg-white/10 mx-2'></div>
-                  <p onClick={() => logout()} className='cursor-pointer text-sm p-3 hover:bg-white/10 transition-colors text-red-400'>Logout</p>
+                <MoreVertical className='w-5 h-5 cursor-pointer text-gray-400 hover:text-white transition-colors' />
+                <div className='absolute top-full right-0 z-50 w-36 p-1.5 rounded-2xl bg-[#1c1c1c]/95 backdrop-blur-xl border border-white/10 shadow-xl text-gray-100 hidden group-hover:block overflow-hidden origin-top-right transform transition-all'>
+                  <p onClick={() => navigate('/profile')} className='cursor-pointer text-sm font-medium p-3 hover:bg-white/10 rounded-xl transition-colors'>Edit Profile</p>
+                  <div className='h-[1px] bg-white/10 mx-2 my-1'></div>
+                  <p onClick={() => logout()} className='cursor-pointer text-sm font-medium p-3 hover:bg-red-500/10 rounded-xl transition-colors text-red-400'>Logout</p>
                 </div>
               </div>
             </div>
           </div>
 
 
-          <div className='bg-black/20 rounded-2xl flex items-center gap-2 py-3 px-4 mt-5 border border-white/5 focus-within:border-violet-500/50 focus-within:bg-black/30 transition-all'>
+          <div className='bg-white/5 backdrop-blur-sm rounded-2xl flex items-center gap-3 py-3 px-4 mt-5 border border-white/5 focus-within:border-violet-500/50 focus-within:bg-black/40 focus-within:shadow-[0_0_15px_rgba(124,58,237,0.1)] transition-all duration-300'>
             <Search className='w-4 h-4 text-gray-400' />
             <input
               onChange={(e) => setInput(e.target.value)}
               type="text"
-              className='bg-transparent border-none outline-none text-white text-sm placeholder-gray-500 flex-1'
-              placeholder='Search Connections...'
+              className='bg-transparent border-none outline-none text-white text-sm placeholder-gray-500 flex-1 font-medium'
+              placeholder='Search Chat...'
             />
           </div>
 
         </div>
 
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-3 pb-4'>
           {/* Groups Section */}
           {(activeTab === 'groups' || window.innerWidth >= 768) && filteredGroups.length > 0 && (
             <div>
-              <p className="text-gray-400 text-xs mb-2 pl-4 uppercase font-semibold tracking-wider">Groups</p>
-              {filteredGroups.map((group) => (
-                <div
-                  onClick={() => { setSelectedUser(group); }} // Treating group as user for selection
-                  key={group._id}
-                  className={`relative flex items-center gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all duration-200 max-sm:text-sm ${selectedUser?._id === group._id
-                      ? 'bg-violet-600/30 border border-violet-500/30 shadow-[0_0_15px_rgba(124,58,237,0.2)]'
-                      : 'hover:bg-white/5 border border-transparent'
-                    }`}
-                >
-                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white border border-indigo-400/30">{group.name[0]}</div>
-                  <div className='flex flex-col leading-5'>
-                    <p className='font-medium'>{group.name}</p>
-                    <p className='text-xs text-gray-400 group-hover:text-gray-300'>{group.members.length} members</p>
+              <p className="text-gray-500 text-[11px] mb-3 pl-2 uppercase font-bold tracking-widest">Groups</p>
+              <div className="space-y-1">
+                {filteredGroups.map((group) => (
+                  <div
+                    onClick={() => { setSelectedUser(group); }} // Treating group as user for selection
+                    key={group._id}
+                    className={`relative flex items-center gap-3.5 p-3 rounded-2xl cursor-pointer transition-all duration-300 group max-sm:text-sm ${selectedUser?._id === group._id
+                      ? 'bg-gradient-to-r from-violet-600/20 to-indigo-600/10 border border-violet-500/20 shadow-lg'
+                      : 'hover:bg-white/5 border border-transparent hover:border-white/5'
+                      }`}
+                  >
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center text-white border-2 shadow-inner transition-transform duration-300 overflow-hidden ${selectedUser?._id === group._id
+                      ? 'bg-violet-600 border-violet-400 scale-105'
+                      : 'bg-white/10 border-transparent group-hover:scale-105'
+                      }`}>
+                      {group.name[0]}
+                    </div>
+                    <div className='flex flex-col'>
+                      <p className={`font-semibold text-[15px] ${selectedUser?._id === group._id ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>{group.name}</p>
+                      <p className='text-xs text-gray-500 group-hover:text-gray-400 transition-colors'>{group.members.length} members</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
           {/* Users Section */}
           {(activeTab === 'chats' || window.innerWidth >= 768) && (
             <div>
-              <p className="text-gray-400 text-xs mb-2 pl-4 uppercase font-semibold tracking-wider">Connections</p>
-              {filteredUsers.length > 0 ? filteredUsers.map((user, index) => (
-                <div
-                  onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
-                  key={index}
-                  className={`relative flex items-center gap-3 p-3 pl-4 rounded-xl cursor-pointer transition-all duration-200 max-sm:text-sm ${selectedUser?._id === user._id
-                      ? 'bg-violet-600/30 border border-violet-500/30 shadow-[0_0_15px_rgba(124,58,237,0.2)]'
-                      : 'hover:bg-white/5 border border-transparent'
-                    }`}
-                >
-                  <img src={user?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/10' />
-                  <div className='flex flex-col leading-5'>
-                    <p className='font-medium'>{user.fullName}</p>
-                    <div className='flex items-center gap-2'>
-                      {onlineUsers.includes(user._id) ? (
-                        <>
-                          <span className='w-2 h-2 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]'></span>
-                          <span className={`text-xs ${selectedUser?._id === user._id ? 'text-green-200' : 'text-green-400'}`}>Online</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className='w-2 h-2 rounded-full bg-gray-500'></span>
-                          <span className='text-gray-400 text-xs'>Offline</span>
-                        </>
+              <p className="text-gray-500 text-[11px] mb-3 pl-2 uppercase font-bold tracking-widest">Connections</p>
+              {filteredUsers.length > 0 ? (
+                <div className="space-y-1">
+                  {filteredUsers.map((user, index) => (
+                    <div
+                      onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
+                      key={index}
+                      className={`relative flex items-center gap-3.5 p-3 rounded-2xl cursor-pointer transition-all duration-300 group max-sm:text-sm ${selectedUser?._id === user._id
+                        ? 'bg-gradient-to-r from-violet-600/20 to-indigo-600/10 border border-violet-500/20 shadow-lg'
+                        : 'hover:bg-white/5 border border-transparent hover:border-white/5'
+                        }`}
+                    >
+                      <div className="relative">
+                        <img
+                          src={user?.profilePic || assets.avatar_icon}
+                          alt=""
+                          className={`w-11 h-11 rounded-full object-cover border-2 shadow-sm transition-transform duration-300 ${selectedUser?._id === user._id ? 'border-violet-400 scale-105' : 'border-transparent group-hover:scale-105'}`}
+                        />
+                        {onlineUsers.includes(user._id) && (
+                          <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border-2 border-[#100b21] rounded-full shadow-sm"></span>
+                        )}
+                      </div>
+
+                      <div className='flex flex-col flex-1 min-w-0'>
+                        <div className="flex justify-between items-center">
+                          <p className={`font-semibold text-[15px] truncate ${selectedUser?._id === user._id ? 'text-white' : 'text-gray-200 group-hover:text-white'}`}>{user.fullName}</p>
+                          {onlineUsers.includes(user._id) && selectedUser?._id !== user._id && (
+                            <span className="text-[10px] items-center gap-1 text-green-400 font-medium hidden group-hover:flex">
+                              Online
+                            </span>
+                          )}
+                        </div>
+                        <p className={`text-xs truncate ${selectedUser?._id === user._id ? 'text-violet-300/80' : 'text-gray-500 group-hover:text-gray-400'}`}>
+                          {user.bio || "Available"}
+                        </p>
+                      </div>
+
+                      {unseenMessages[user._id] > 0 && (
+                        <div className='absolute right-3 top-1/2 -translate-y-1/2 min-w-[20px] h-5 px-1.5 flex justify-center items-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 text-[10px] text-white font-bold shadow-lg ring-2 ring-black'>
+                          {unseenMessages[user._id]}
+                        </div>
                       )}
                     </div>
-                  </div>
-                  {unseenMessages[user._id] > 0 && (
-                    <p className='absolute top-1/2 -translate-y-1/2 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-red-500 text-white font-bold shadow-md'>
-                      {unseenMessages[user._id]}
-                    </p>
-                  )}
+                  ))}
                 </div>
-              )) : (
-                <div className='text-center text-gray-400 mt-10 text-sm flex flex-col items-center gap-2'>
+              ) : (
+                <div className='text-center text-gray-500 mt-12 text-sm flex flex-col items-center gap-4'>
+                  <div className="p-4 bg-white/5 rounded-full">
+                    <Users className="w-8 h-8 opacity-50" />
+                  </div>
                   <p>No connections yet.</p>
-                  <button onClick={() => setShowAddFriend(true)} className="flex items-center gap-2 text-violet-400 hover:text-violet-300 cursor-pointer px-4 py-2 rounded-full hover:bg-white/5 transition-colors">
+                  <button onClick={() => setShowAddFriend(true)} className="flex items-center gap-2 text-white bg-violet-600 hover:bg-violet-700 cursor-pointer px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-violet-900/20 active:scale-95 text-xs font-semibold uppercase tracking-wide">
                     <UserPlus className="w-4 h-4" />
                     <span>Add someone</span>
                   </button>

@@ -24,10 +24,14 @@ const App = () => {
 
   return (
     <div
-      className="bg-cover min-h-screen relative overflow-x-hidden"
+      className="bg-cover min-h-screen relative overflow-x-hidden font-outfit" // Enforcing Outfit font
       style={{ backgroundImage: `url(${bgImage})`, backgroundAttachment: 'fixed' }}
     >
       <div className="absolute inset-0 bg-black/40 z-0"></div>
+
+      {/* Animated Subtle overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-20 bg-gradient-to-br from-violet-900/30 to-black/30 animate-pulse"></div>
+
       <div className="relative z-10 w-full h-full">
         <Toaster />
         <Routes>

@@ -80,12 +80,16 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
   }, [messages])
 
   return selectedUser ? (
-    <div className='h-full flex flex-col relative backdrop-blur-lg overflow-hidden'>
+    <div className='h-full flex flex-col relative backdrop-blur-lg overflow-hidden'
+      style={{
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)'
+      }}
+    >
       {/* Animated Background Layer */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
         {/* Bubbles */}
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="animate-bubble bg-gradient-to-t from-white/5 to-transparent rounded-full blur-2xl"
+          <div key={i} className="animate-bubble bg-gradient-to-t from-violet-500/10 to-transparent rounded-full blur-3xl"
             style={{
               left: `${Math.random() * 100}%`,
               width: `${Math.random() * 150 + 50}px`,
@@ -95,73 +99,72 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             }}
           />
         ))}
-        {/* Floating Emojis */}
-        <div className="absolute inset-0 opacity-[0.03] flex justify-around items-end pb-20">
-          <span className="text-8xl animate-float" style={{ animationDelay: '0s' }}>💬</span>
-          <span className="text-9xl animate-float" style={{ animationDelay: '2s' }}>🌊</span>
-          <span className="text-8xl animate-float" style={{ animationDelay: '4s' }}>✨</span>
-        </div>
       </div>
 
       {/* ----------header----------------- */}
-      <div className='flex-none flex items-center gap-3 py-3 mx-4 border-b border-white/10 relative z-10'>
+      <div className='flex-none flex items-center gap-3 py-4 px-6 mx-4 mt-2 mb-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl relative z-20 shadow-lg'>
         <button onClick={() => setSelectedUser(null)} className='md:hidden p-2 hover:bg-white/10 rounded-full transition-colors'>
           <ArrowLeft className="w-6 h-6 text-white" />
         </button>
 
-        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/20' />
-        <p className='flex-1 text-lg text-white font-medium flex items-center gap-2'>{selectedUser?.fullName}
-          {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
-        </p>
+        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-12 h-12 rounded-full object-cover border-2 border-white/10 shadow-md transform hover:scale-105 transition-transform duration-300' />
+        <div className='flex-1 flex flex-col'>
+          <p className='text-lg text-white font-semibold flex items-center gap-2'>{selectedUser?.fullName}
+            {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse'></span>}
+          </p>
+          <p className='text-xs text-violet-200/70 font-medium tracking-wide'>
+            {onlineUsers.includes(selectedUser._id) ? 'Online' : 'Offline'}
+          </p>
+        </div>
 
-        <button onClick={() => setShowRightSidebar(!showRightSidebar)} className='p-2 hover:bg-white/10 rounded-full transition-colors' title="Chat Info">
-          <Info className="w-6 h-6 text-white/90" />
+        <button onClick={() => setShowRightSidebar(!showRightSidebar)} className='p-2 hover:bg-white/10 rounded-full transition-colors group' title="Chat Info">
+          <Info className="w-6 h-6 text-white/70 group-hover:text-white transition-colors" />
         </button>
       </div>
 
       {/*----------------Chat area---------------------  */}
-      <div className='flex-1 overflow-y-auto p-3 pb-6 flex flex-col'>
+      <div className='flex-1 overflow-y-auto p-4 pb-6 flex flex-col gap-2 custom-scrollbar'>
         {messages.map((msg, index) => (
-          <div key={index} className={`flex items-end gap-2 justify-end group relative ${msg.senderId !== authUser._id && 'flex-row-reverse'} animate-fade-in-up`}
+          <div key={index} className={`flex items-end gap-2 justify-end group relative ${msg.senderId !== authUser._id && 'flex-row-reverse'}`}
+            style={{ opacity: 0, animation: 'fade-in-up 0.3s ease-out forwards' }} // Simple inline animation to avoid motion prop issues if library not fully ready
           >
             {msg.isDeletedForEveryone ? (
-              <p className='p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 italic text-gray-400 bg-gray-800 border border-gray-700'>This message was deleted</p>
+              <p className='p-3 px-4 max-w-[200px] md:text-sm font-light rounded-2xl mb-2 italic text-gray-400 bg-white/5 border border-white/5 backdrop-blur-sm'>This message was deleted</p>
             ) : (
               <>
                 <div
                   onClick={() => setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id)}
-                  className='cursor-pointer'
+                  className='cursor-pointer relative z-10'
                 >
                   {msg.image ? (
-                    <img src={msg.image} alt='' className='max-w-[280px] border border-white/10 rounded-2xl overflow-hidden mb-8 shadow-lg hover:scale-[1.02] transition-transform' />
+                    <img src={msg.image} alt='' className='max-w-[280px] md:max-w-sm border-4 border-white/10 rounded-2xl overflow-hidden mb-2 shadow-2xl hover:scale-[1.01] transition-transform' />
                   ) : (
-                    <p className={`p-3 px-4 max-w-[280px] md:max-w-md md:text-sm font-light shadow-md mb-8 break-all ${msg.senderId == authUser._id
-                      ? 'bg-violet-600 rounded-2xl rounded-tr-md text-white'
-                      : 'bg-white/10 backdrop-blur-md rounded-2xl rounded-tl-md text-gray-100 border border-white/5'
+                    <p className={`p-3 px-5 max-w-[280px] md:max-w-md md:text-[15px] font-normal shadow-md mb-2 break-words leading-relaxed ${msg.senderId == authUser._id
+                      ? 'bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl rounded-tr-sm text-white shadow-violet-900/20'
+                      : 'bg-white/10 backdrop-blur-md rounded-2xl rounded-tl-sm text-gray-100 border border-white/5 shadow-black/10'
                       }`}>{msg.text}</p>
                   )}
                 </div>
 
                 {/* Delete Options */}
                 {selectedMessageId === msg._id && (
-                  <div className={`absolute top-5 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-[#1c1c1c]/90 backdrop-blur-xl border border-white/10 text-gray-200 text-xs rounded-xl shadow-2xl z-50 p-1.5 flex flex-col gap-1 min-w-[140px] overflow-hidden`}>
-                    <button onClick={() => handleCopy(msg)} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors flex items-center gap-2'>
-                      {/* You could add icons here later if you imported them */}
+                  <div className={`absolute top-full mt-1 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-[#1a1a1a]/95 backdrop-blur-xl border border-white/10 text-gray-200 text-xs rounded-xl shadow-2xl z-50 p-1.5 flex flex-col gap-1 min-w-[140px] overflow-hidden transform origin-top scale-100 animate-fade-in-up`}>
+                    <button onClick={() => handleCopy(msg)} className='hover:bg-white/10 p-2.5 rounded-lg text-left whitespace-nowrap transition-colors flex items-center gap-2 font-medium'>
                       {msg.image ? "Copy Media" : "Copy Text"}
                     </button>
-                    <button onClick={() => handleForward(msg)} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors'>Forward</button>
-                    <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10'>Delete for me</button>
+                    <button onClick={() => handleForward(msg)} className='hover:bg-white/10 p-2.5 rounded-lg text-left whitespace-nowrap transition-colors font-medium'>Forward</button>
+                    <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-white/10 p-2.5 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10 font-medium'>Delete for me</button>
                     {msg.senderId === authUser._id && (
-                      <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-white/10 p-2 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10'>Delete for everyone</button>
+                      <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-white/10 p-2.5 rounded-lg text-left whitespace-nowrap transition-colors text-red-400 hover:bg-red-500/10 font-medium'>Delete for everyone</button>
                     )}
                   </div>
                 )}
               </>
             )}
 
-            <div className='text-center text-xs'>
-              <img src={msg.senderId === authUser._id ? authUser?.profilePic || assets.avatar_icon : selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-7 rounded-full' />
-              <p className='text-gray-500'>{formatMessageTime(msg.createdAt)}</p>
+            <div className='text-center text-[10px] text-gray-400/80 pb-1'>
+              {/* Moved time to be more subtle */}
+              <span>{formatMessageTime(msg.createdAt)}</span>
             </div>
           </div>
         ))}
@@ -170,22 +173,26 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-4 p-4 pb-5 relative z-10'>
-        <div className='flex-1 flex items-center bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-3 rounded-full relative shadow-2xl focus-within:border-violet-500/50 focus-within:bg-black/60 transition-all'>
+      <div className='flex-none flex items-center gap-4 p-4 pb-5 relative z-20'>
+        <div className='flex-1 flex items-center bg-white/5 backdrop-blur-2xl border border-white/10 px-2 py-2 rounded-full relative shadow-lg focus-within:border-violet-500/50 focus-within:bg-black/40 transition-all duration-300'>
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
-            <div className="absolute bottom-16 left-0 z-50 shadow-[0_0_30px_rgba(0,0,0,0.5)] rounded-2xl overflow-hidden border border-white/10 animate-fade-in-up">
+            <div className="absolute bottom-20 left-0 z-50 shadow-[0_0_40px_rgba(0,0,0,0.6)] rounded-3xl overflow-hidden border border-white/10 animate-fade-in-up bg-[#1a1a1a]">
               <EmojiPicker
                 theme="dark"
                 onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
+                skinTonesDisabled
+                searchDisabled
+                width={300}
+                height={350}
               />
             </div>
           )}
 
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
+            className="p-3 text-gray-400 hover:text-yellow-400 hover:bg-white/5 rounded-full transition-all"
           >
             <Smile className="w-6 h-6" />
           </button>
@@ -196,15 +203,15 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
             type="text"
             placeholder='Type a message...'
-            className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
+            className='flex-1 text-[15px] p-2 border-none outline-none text-white placeholder-gray-500 bg-transparent font-medium'
           />
           <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
-          <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all">
+          <label htmlFor='image' className="p-3 cursor-pointer text-gray-400 hover:text-blue-400 hover:bg-white/5 rounded-full transition-all">
             <ImagePlus className="w-6 h-6" />
           </label>
         </div>
-        <button onClick={handleSendMessage} className='p-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] hover:scale-110 transition-all active:scale-95'>
-          <SendHorizontal className="w-5 h-5 text-white" />
+        <button onClick={handleSendMessage} className='p-4 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:scale-105 transition-all duration-300 active:scale-95 group border border-white/10'>
+          <SendHorizontal className="w-6 h-6 text-white group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
 
@@ -220,12 +227,17 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
     </div>
   ) : (
-    <div className='flex flex-col items-center justify-center gap-4 text-gray-500 bg-black/20 backdrop-blur-sm max-md:hidden h-full border-l border-white/5'>
-      <div className='p-6 bg-white/5 rounded-full mb-2 animate-pulse'>
-        <img src={assets.logo_icon} alt="" className='max-w-16 opacity-50' />
+    <div className='flex flex-col items-center justify-center gap-6 text-gray-500 bg-black/20 backdrop-blur-sm max-md:hidden h-full border-l border-white/5 relative overflow-hidden'>
+      {/* Background Decorative Elements */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div className='p-8 bg-gradient-to-br from-white/10 to-transparent border border-white/5 rounded-[2rem] mb-4 animate-float shadow-2xl backdrop-blur-md relative z-10'>
+        <img src={assets.logo_icon} alt="" className='w-24 opacity-80 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]' />
       </div>
-      <p className='text-xl font-medium text-white/80 tracking-wide'>Chat anytime, anywhere</p>
-      <p className='text-sm text-gray-500'>Select a connection to start messaging</p>
+      <div className='text-center space-y-2 relative z-10'>
+        <h2 className='text-3xl font-bold text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400'>Welcome to Chat App</h2>
+        <p className='text-base text-gray-400 font-medium'>Select a connection to start messaging</p>
+      </div>
     </div>
   )
 }
