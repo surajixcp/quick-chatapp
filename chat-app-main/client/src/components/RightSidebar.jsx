@@ -118,8 +118,8 @@ const RightSidebar = ({ onClose }) => {
             </div>
 
             <div>
-              <p className='mb-4 font-bold text-[11px] text-gray-400 uppercase tracking-widest'>Privacy & Support</p>
-              <div className='flex flex-col gap-3'>
+              <p className='mb-4 font-bold text-[11px] text-gray-400 uppercase tracking-widest text-center'>Privacy & Support</p>
+              <div className='flex flex-col gap-3 items-center'>
                 <button
                   onClick={async () => {
                     try {
@@ -137,7 +137,7 @@ const RightSidebar = ({ onClose }) => {
                       toast.error("Error updating block status");
                     }
                   }}
-                  className={`w-full py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 group ${authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/10 hover:border-red-500/30'}`}
+                  className={`w-full max-w-[240px] py-3 rounded-2xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 group shadow-lg ${authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'bg-gradient-to-r from-gray-700 to-gray-600 text-white hover:from-gray-600 hover:to-gray-500' : 'bg-gradient-to-r from-red-500/10 to-red-900/20 text-red-400 border border-red-500/20 hover:border-red-500/40 hover:from-red-500/20 hover:to-red-900/30'}`}
                 >
                   {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? <UserCheck className="w-4 h-4" /> : <Ban className="w-4 h-4 group-hover:scale-110 transition-transform" />}
                   {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'Unblock User' : 'Block User'}
@@ -158,7 +158,7 @@ const RightSidebar = ({ onClose }) => {
                       toast.error("Error removing friend");
                     }
                   }}
-                  className='w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 font-medium transition-all text-gray-300 flex items-center justify-center gap-2 border border-white/5 hover:border-white/10 group'
+                  className='w-full max-w-[240px] py-3 rounded-2xl bg-white/5 hover:bg-white/10 font-medium text-sm transition-all text-gray-300 flex items-center justify-center gap-2 border border-white/5 hover:border-white/10 group shadow-md hover:shadow-white/5'
                 >
                   <UserX className="w-4 h-4 group-hover:text-red-400 transition-colors" />
                   <span className="group-hover:text-white transition-colors">Remove Connection</span>
@@ -168,10 +168,10 @@ const RightSidebar = ({ onClose }) => {
           </div>
         </div>
 
-        <div className='p-6 border-t border-white/5 bg-[#120f1d]/50 backdrop-blur-md'>
-          <button onClick={() => logout()} className='w-full flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-none text-sm font-bold py-3.5 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-[0.98] tracking-wide uppercase'>
+        <div className='p-6 border-t border-white/5 bg-[#120f1d]/50 backdrop-blur-md flex justify-center'>
+          <button onClick={() => logout()} className='w-full max-w-[240px] flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-none text-xs font-bold py-3.5 rounded-full cursor-pointer hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] transition-all active:scale-[0.98] tracking-widest uppercase'>
             <LogOut className="w-4 h-4" />
-            Logout Session
+            Logout
           </button>
         </div>
       </div>
