@@ -29,7 +29,7 @@ export const ChatProvider = ({ children }) => {
                 console.error('Socket connection error:', error);
             });
         } else {
-            console.log('Socket not available');
+            // console.log('Socket not available');
         }
     }, [socket]);
 
