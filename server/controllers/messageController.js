@@ -82,7 +82,7 @@ export const markMessageAsSeen = async (req, res) => {
 // Send message to selected user
 export const sendMessage = async (req, res) => {
     try {
-        const { text, image, isForwarded } = req.body;
+        const { text, image, file, location, isForwarded } = req.body;
         const { id: receiverId } = req.params;
         const senderId = req.user._id;
 
@@ -101,7 +101,7 @@ export const sendMessage = async (req, res) => {
         // Check if receiverId is a Group
         const isGroup = await import("../models/Group.js").then(m => m.default.findById(receiverId));
 
-        console.log('Send message request:', { senderId, receiverId, text: text ? text.substring(0, 50) + '...' : 'no text', hasImage: !!image, isGroup: !!isGroup });
+        console.log('Send message request:', { senderId, receiverId, text: text ? text.substring(0, 50) + '...' : 'no text', hasImage: !!image, hasFile: !!file, hasLocation: !!location, isGroup: !!isGroup });
 
         let imageUrl;
         if (image && !isForwarded) {
@@ -116,10 +116,24 @@ export const sendMessage = async (req, res) => {
             imageUrl = image;
         }
 
+        let fileUrl;
+        if (file && !isForwarded) {
+            if (file.startsWith("data:")) {
+                const uploadResponse = await cloudinary.uploader.upload(file, { resource_type: "auto" });
+                fileUrl = uploadResponse.secure_url;
+            } else {
+                fileUrl = file;
+            }
+        } else if (file) {
+            fileUrl = file;
+        }
+
         const newMessageData = {
             senderId,
             text,
             image: imageUrl,
+            fileUrl,
+            location,
             isForwarded
         };
 

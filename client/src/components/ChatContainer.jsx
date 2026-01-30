@@ -6,7 +6,7 @@ import { ChatContext } from '../../context/ChatContext'
 import toast from 'react-hot-toast'
 import EmojiPicker from 'emoji-picker-react'
 import ForwardModal from './ForwardModal'
-import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info } from 'lucide-react'
+import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info, Paperclip, MapPin, FileText } from 'lucide-react'
 
 const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
@@ -40,10 +40,60 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
     setShowEmojiPicker(false);
   }
 
+  // Handle sending a generic file (PDF, etc.)
+  const handleSendFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check size limit (e.g. 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must be less than 10MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      await sendMessage({ file: reader.result });
+      e.target.value = ""; // Reset input
+    }
+    reader.readAsDataURL(file);
+  }
+
+  // Handle sending location
+  const handleSendLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    toast.loading("Fetching location...");
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        toast.dismiss();
+        const location = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+        await sendMessage({ location });
+      },
+      (error) => {
+        toast.dismiss();
+        toast.error("Unable to retrieve location");
+        console.error(error);
+      }
+    );
+  }
+
   const handleCopy = (msg) => {
     if (msg.image) {
       navigator.clipboard.writeText(msg.image);
       toast.success("Image URL copied to clipboard");
+    } else if (msg.fileUrl) {
+      navigator.clipboard.writeText(msg.fileUrl);
+      toast.success("File URL copied to clipboard");
+    } else if (msg.location) {
+      navigator.clipboard.writeText(`https://www.google.com/maps?q=${msg.location.latitude},${msg.location.longitude}`);
+      toast.success("Location URL copied to clipboard");
     } else {
       navigator.clipboard.writeText(msg.text);
       toast.success("Message copied to clipboard");
@@ -132,10 +182,35 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   onClick={() => setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id)}
                   className='cursor-pointer'
                 >
-                  {msg.image ? (
-                    <img src={msg.image} alt='' className='max-w-[70vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-8' />
-                  ) : (
-                    <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-8 break-words bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
+                  {msg.image && (
+                    <img src={msg.image} alt='' className='max-w-[70vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-2' />
+                  )}
+                  {msg.fileUrl && (
+                    <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 p-3 bg-gray-800 rounded-lg mb-2 border border-gray-700 hover:bg-gray-700 transition-colors'>
+                      <div className="bg-violet-500/20 p-2 rounded-full">
+                        <FileText className="w-5 h-5 text-violet-400" />
+                      </div>
+                      <span className="text-sm underline text-blue-400">View Document</span>
+                    </a>
+                  )}
+                  {msg.location && (
+                    <a
+                      href={`https://www.google.com/maps?q=${msg.location.latitude},${msg.location.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block mb-2 rounded-lg overflow-hidden border border-gray-700"
+                    >
+                      <div className="bg-gray-800 p-3 flex items-center gap-2">
+                        <MapPin className="w-5 h-5 text-red-500" />
+                        <span className="text-sm text-gray-300">Shared Location</span>
+                      </div>
+                      <div className="bg-gray-900 p-2 text-xs text-center text-gray-500">
+                        Click to view on map
+                      </div>
+                    </a>
+                  )}
+                  {msg.text && (
+                    <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
                   )}
                 </div>
 
@@ -192,8 +267,21 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             placeholder='Type a message...'
             className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
           />
-          <input onChange={handleSendImage} type="file" id='image' accept='image/png, image/jpeg' hidden />
-          <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all">
+
+          {/* File Upload */}
+          <input onChange={handleSendFile} type="file" id='file-upload' className='hidden' />
+          <label htmlFor='file-upload' className="ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all" title="Attach File">
+            <Paperclip className="w-5 h-5" />
+          </label>
+
+          {/* Location Share */}
+          <button onClick={handleSendLocation} className="ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all" title="Share Location">
+            <MapPin className="w-5 h-5" />
+          </button>
+
+          {/* Image Upload */}
+          <input onChange={handleSendImage} type="file" id='image' accept='image/*' hidden />
+          <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all" title="Send Image">
             <ImagePlus className="w-6 h-6" />
           </label>
         </div>

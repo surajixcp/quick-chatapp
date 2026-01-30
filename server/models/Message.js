@@ -5,6 +5,11 @@ const messageSchema = new mongoose.Schema({
     receiverId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     text: { type: String },
     image: { type: String },
+    fileUrl: { type: String },
+    location: {
+        latitude: { type: Number },
+        longitude: { type: Number }
+    },
     seen: { type: Boolean, default: false },
     deletedFor: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     isDeletedForEveryone: { type: Boolean, default: false },
