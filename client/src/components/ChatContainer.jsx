@@ -198,7 +198,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
           <ArrowLeft className="w-6 h-6 text-white" />
         </button>
 
-        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/20' />
+        <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 aspect-square rounded-full object-cover border border-white/20' />
         <p className='flex-1 text-lg text-white font-medium flex items-center gap-2'>{selectedUser?.fullName}
           {onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
         </p>

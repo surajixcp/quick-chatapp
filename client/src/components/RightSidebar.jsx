@@ -115,7 +115,7 @@ const RightSidebar = ({ onClose }) => {
         <div className='px-8 text-xs'>
           <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Group Admin</p>
           <div className='flex items-center gap-3 p-2 bg-white/5 rounded-lg mb-6'>
-            <img src={displayUser.admin?.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' alt="" />
+            <img src={displayUser.admin?.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full object-cover' alt="" />
             <p className='font-medium'>{displayUser.admin?.fullName}</p>
             {authUser._id?.toString() === displayUser.admin?._id?.toString() && <span className='text-[10px] bg-violet-600 px-2 py-0.5 rounded text-white'>You</span>}
           </div>
@@ -142,7 +142,7 @@ const RightSidebar = ({ onClose }) => {
               .map(member => (
                 <div key={member._id} className='flex items-center justify-between p-2 hover:bg-white/5 rounded-lg transition-colors'>
                   <div className='flex items-center gap-3'>
-                    <img src={member.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' alt="" />
+                    <img src={member.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full object-cover' alt="" />
                     <p className='text-gray-300'>{member.fullName}</p>
                   </div>
                   {isAdmin && member._id !== authUser._id && (

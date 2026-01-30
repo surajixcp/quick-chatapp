@@ -42,7 +42,7 @@ const Sidebar = () => {
                 <Users className="w-5 h-5 text-gray-300 hover:text-white" />
               </button>
               <div onClick={() => navigate('/profile')} className='relative group cursor-pointer ml-1'>
-                <img src={authUser?.profilePic || assets.avatar_icon} alt="" className='w-8 h-8 rounded-full object-cover border-2 border-transparent hover:border-violet-500 transition-all' title="My Profile" />
+                <img src={authUser?.profilePic || assets.avatar_icon} alt="" className='w-8 h-8 aspect-square rounded-full object-cover border-2 border-transparent hover:border-violet-500 transition-all' title="My Profile" />
               </div>
               <div className='relative py-2'>
                 <button onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }} className='p-1 rounded-full hover:bg-white/10 transition-colors'>
