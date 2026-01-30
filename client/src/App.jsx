@@ -20,7 +20,7 @@ const App = () => {
   }
 
   return (
-    <div className="bg-contain" style={{ backgroundImage: `url(${bgImage})` }}>
+    <div className="bg-cover bg-center bg-no-repeat min-h-screen" style={{ backgroundImage: `url(${bgImage})` }}>
       <Toaster />
       <Routes>
         <Route path='/' element={authUser ? <HomePage /> : <Navigate to={'/login'} replace />} />

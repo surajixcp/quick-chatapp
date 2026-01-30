@@ -33,7 +33,7 @@ const LoginPage = () => {
       <img src={assets.logo_big} alt="" className='w-[min(30vw,250px)]' />
       {/* ------------right--------------- */}
 
-      <form onSubmit={onSubmitHandler} className='border-2 bg-white/8 text-white border-gray-500 p-6 flex flex-col gap-6 rounded-lg shadow-lg'>
+      <form onSubmit={onSubmitHandler} className='border-2 bg-white/10 backdrop-blur-md text-white border-white/20 p-6 flex flex-col gap-4 md:gap-6 rounded-2xl shadow-xl w-full max-w-md mx-4'>
         <h2 className='font-medium text-2xl flex justify-between items-center'>
           {currState}
           {isDataSubmitted && <img onClick={() => setIsDataSubmitted(false)} src={assets.arrow_icon} alt="" className='w-5 cursor-pointer' />}
@@ -61,7 +61,7 @@ const LoginPage = () => {
           )
         }
 
-        <button type='submit' className='bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 px-20 rounded-full cursor-pointer'>
+        <button type='submit' className='bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 w-full rounded-full cursor-pointer hover:shadow-lg hover:shadow-purple-500/30 transition-all active:scale-95'>
           {currState === 'Sign up' ? 'Create Account' : "Login"}
         </button>
 
