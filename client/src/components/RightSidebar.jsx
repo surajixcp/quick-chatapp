@@ -94,9 +94,14 @@ const RightSidebar = ({ onClose }) => {
               </button>
             )}
           </h1>
-          <p className='text-gray-400 mt-1 max-w-[200px] text-center'>
-            {isGroup ? `${selectedUser.members.length} members` : (selectedUser.bio || "No bio available")}
+          <p className='text-gray-300 mt-2 text-sm text-center px-4 max-h-24 overflow-y-auto'>
+            {isGroup ? (selectedUser.description || "") : (selectedUser.bio || "No bio available")}
           </p>
+          {isGroup && (
+            <p className='text-gray-400 mt-1 max-w-[200px] text-center text-xs'>
+              {selectedUser.members.length} members
+            </p>
+          )}
         </div>
       </div>
       <hr className='border-gray-700/50 my-6 mx-8' />
