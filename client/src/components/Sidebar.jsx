@@ -15,6 +15,7 @@ const Sidebar = () => {
   const [input, setInput] = useState("")
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showAddFriend, setShowAddFriend] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();
 
@@ -43,13 +44,20 @@ const Sidebar = () => {
               <div onClick={() => navigate('/profile')} className='relative group cursor-pointer ml-1'>
                 <img src={authUser?.profilePic || assets.avatar_icon} alt="" className='w-8 h-8 rounded-full object-cover border-2 border-transparent hover:border-violet-500 transition-all' title="My Profile" />
               </div>
-              <div className='relative py-2 group'>
-                <MoreVertical className='w-5 h-5 cursor-pointer text-gray-300 hover:text-white' />
-                <div className='absolute top-full right-0 z-20 w-32 p-1 rounded-lg bg-[#282142] border border-gray-700 shadow-xl text-gray-100 hidden group-hover:block overflow-hidden'>
-                  <p onClick={() => navigate('/profile')} className='cursor-pointer text-sm p-3 hover:bg-white/5 transition-colors'>Edit Profile</p>
-                  <div className='h-[1px] bg-gray-700 mx-2'></div>
-                  <p onClick={() => logout()} className='cursor-pointer text-sm p-3 hover:bg-white/5 transition-colors text-red-400'>Logout</p>
-                </div>
+              <div className='relative py-2'>
+                <button onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu); }} className='p-1 rounded-full hover:bg-white/10 transition-colors'>
+                  <MoreVertical className='w-5 h-5 cursor-pointer text-gray-300 hover:text-white' />
+                </button>
+                {showMenu && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)}></div>
+                    <div className='absolute top-full right-0 z-20 w-32 p-1 rounded-lg bg-[#282142] border border-gray-700 shadow-xl text-gray-100 overflow-hidden animate-fade-in'>
+                      <p onClick={() => { navigate('/profile'); setShowMenu(false); }} className='cursor-pointer text-sm p-3 hover:bg-white/5 transition-colors'>Edit Profile</p>
+                      <div className='h-[1px] bg-gray-700 mx-2'></div>
+                      <p onClick={() => { logout(); setShowMenu(false); }} className='cursor-pointer text-sm p-3 hover:bg-white/5 transition-colors text-red-400'>Logout</p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
