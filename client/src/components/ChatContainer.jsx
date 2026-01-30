@@ -151,6 +151,22 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
     }
   }, [messages])
 
+  // Close popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If popup is open, close it
+      if (selectedMessageId) {
+        setSelectedMessageId(null);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [selectedMessageId]);
+
+
   return selectedUser ? (
     <div className='h-full flex flex-col relative backdrop-blur-lg overflow-hidden'>
       {/* Animated Background Layer */}
@@ -201,8 +217,11 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             ) : (
               <>
                 <div
-                  onClick={() => setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id)}
-                  className='cursor-pointer'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id);
+                  }}
+                  className='cursor-pointer relative'
                 >
                   {msg.image && (
                     <img src={msg.image} alt='' className='max-w-[70vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-2' />
@@ -234,19 +253,22 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   {msg.text && (
                     <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
                   )}
-                </div>
 
-                {/* Delete Options */}
-                {selectedMessageId === msg._id && (
-                  <div className={`absolute top-5 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[100px]`}>
-                    <button onClick={() => handleCopy(msg)} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>{msg.image ? "Copy Media" : "Copy Text"}</button>
-                    <button onClick={() => handleForward(msg)} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>Forward</button>
-                    <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>Delete for me</button>
-                    {msg.senderId === authUser._id && (
-                      <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-gray-200 p-1 rounded text-left whitespace-nowrap'>Delete for everyone</button>
-                    )}
-                  </div>
-                )}
+                  {/* Delete Options Popup */}
+                  {selectedMessageId === msg._id && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className={`absolute top-0 ${msg.senderId === authUser._id ? 'right-full mr-2' : 'left-full ml-2'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[120px]`}
+                    >
+                      <button onClick={() => handleCopy(msg)} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>{msg.image ? "Copy Media" : "Copy Text"}</button>
+                      <button onClick={() => handleForward(msg)} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>Forward</button>
+                      <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>Delete for me</button>
+                      {msg.senderId === authUser._id && (
+                        <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>Delete for everyone</button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </>
             )}
 
