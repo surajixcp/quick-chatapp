@@ -57,8 +57,8 @@ const ProfilePage = () => {
         <span>Back to Chat</span>
       </button>
 
-      <div className='w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg'>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>
+      <div className='w-full max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg max-md:border-none p-4 max-md:p-0 bg-transparent shadow-none'>
+        <form onSubmit={handleSubmit} className='flex flex-col gap-3 md:gap-5 p-4 md:p-10 flex-1 w-full'>
           <h3 className='text-lg'>Profile details</h3>
           <div className='flex items-center gap-2'>
             <img src={assets.logo_icon} className='w-4 h-4 opacity-50' alt="User" />
@@ -76,17 +76,17 @@ const ProfilePage = () => {
             <img src={selectedImg ? URL.createObjectURL(selectedImg) : assets.avatar_icon} alt="" className={`w-12 h-12 ${selectedImg && 'rounded-full'}`} />
             upload profile image
           </label>
-          <input onChange={(e) => setName(e.target.value)} value={name} type="text" required placeholder='Your name' className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' />
-          <textarea onChange={(e) => setBio(e.target.value)} value={bio} placeholder='Write profile bio' required className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' rows={4}></textarea>
+          <input onChange={(e) => setName(e.target.value)} value={name} type="text" required placeholder='Your name' className='p-2 max-md:p-1.5 max-md:text-sm border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' />
+          <textarea onChange={(e) => setBio(e.target.value)} value={bio} placeholder='Write profile bio' required className='p-2 max-md:p-1.5 max-md:text-sm border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' rows={3}></textarea>
 
           <div className='flex gap-4 mt-2'>
-            <button type='submit' className='flex-1 bg-gradient-to-r from-purple-400 to-violet-600 text-white p-2 rounded-full text-lg cursor-pointer hover:opacity-90 transition-opacity'>
+            <button type='submit' className='flex-1 bg-gradient-to-r from-purple-400 to-violet-600 text-white p-2 max-md:py-1.5 rounded-full text-lg max-md:text-sm cursor-pointer hover:opacity-90 transition-opacity'>
               Save Changes
             </button>
             <button
               type='button'
               onClick={handleCancel}
-              className='flex-1 border border-gray-500 text-gray-300 p-2 rounded-full text-lg cursor-pointer hover:bg-white/10 transition-colors'
+              className='flex-1 border border-gray-500 text-gray-300 p-2 max-md:py-1.5 rounded-full text-lg max-md:text-sm cursor-pointer hover:bg-white/10 transition-colors'
             >
               Cancel
             </button>
@@ -94,7 +94,7 @@ const ProfilePage = () => {
 
         </form>
         <div className="flex flex-col items-center gap-4">
-          <img className={`max-w-44 aspect-square rounded-full max-10 max-sm:mt-10 p-5 ${selectedImg && 'rounded-full'}`} src={selectedImg ? URL.createObjectURL(selectedImg) : (authUser?.profilePic || assets.logo_icon)} alt="" />
+          <img className={`max-w-44 max-md:w-24 aspect-square rounded-full max-10 max-sm:mt-4 p-1 md:p-5 ${selectedImg && 'rounded-full'}`} src={selectedImg ? URL.createObjectURL(selectedImg) : (authUser?.profilePic || assets.logo_icon)} alt="" />
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
