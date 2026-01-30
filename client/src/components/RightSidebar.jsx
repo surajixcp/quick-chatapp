@@ -16,7 +16,7 @@ const RightSidebar = ({ onClose }) => {
   const { selectedUser, messages, setSelectedUser } = useContext(ChatContext);
   const { logout, onlineUsers, authUser, axios } = useContext(AuthContext);
   const { theme, setTheme, themes } = useContext(ThemeContext);
-  const { groups, removeMemberFromGroup, deleteGroup, toggleGroupPermission } = useContext(GroupContext); // Use GroupContext with groups
+  const { groups, removeMemberFromGroup, deleteGroup, toggleGroupPermission, toggleAllGroupPermissions } = useContext(GroupContext); // Use GroupContext with groups
   const [msgImages, setMsgImages] = useState([]);
   const [msgLinks, setMsgLinks] = useState([]);
   const [showEditGroup, setShowEditGroup] = useState(false);
@@ -120,7 +120,22 @@ const RightSidebar = ({ onClose }) => {
             {authUser._id?.toString() === displayUser.admin?._id?.toString() && <span className='text-[10px] bg-violet-600 px-2 py-0.5 rounded text-white'>You</span>}
           </div>
 
-          <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Members</p>
+          <div className="flex items-center justify-between mb-3">
+            <p className='font-medium text-gray-300 uppercase tracking-wide'>Members</p>
+            {isAdmin && displayUser.members.length > 1 && (
+              <button
+                onClick={() => {
+                  const isAllRestricted = displayUser.members.filter(m => m._id !== displayUser.admin._id).every(m => displayUser.restrictedUsers?.some(r => (r._id || r) === m._id));
+                  toggleAllGroupPermissions(displayUser._id, isAllRestricted ? 'unrestrict' : 'restrict');
+                }}
+                className='text-[10px] bg-white/5 hover:bg-white/10 px-2 py-1 rounded border border-white/10 transition-colors text-gray-400 hover:text-white flex items-center gap-1'
+                title={displayUser.members.filter(m => m._id !== displayUser.admin._id).every(m => displayUser.restrictedUsers?.some(r => (r._id || r) === m._id)) ? "Unmute All" : "Mute All"}
+              >
+                {displayUser.members.filter(m => m._id !== displayUser.admin._id).every(m => displayUser.restrictedUsers?.some(r => (r._id || r) === m._id)) ? <Edit2 className="w-3 h-3" /> : <Ban className="w-3 h-3" />}
+                {displayUser.members.filter(m => m._id !== displayUser.admin._id).every(m => displayUser.restrictedUsers?.some(r => (r._id || r) === m._id)) ? "Unmute All" : "Mute All"}
+              </button>
+            )}
+          </div>
           <div className='flex flex-col gap-2 mb-6'>
             {displayUser.members
               .filter(member => member._id !== displayUser.admin._id) // Filter out admin

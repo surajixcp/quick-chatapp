@@ -181,3 +181,40 @@ export const toggleGroupPermission = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export const toggleAllGroupPermissions = async (req, res) => {
+    try {
+        const { groupId, action } = req.body; // action: 'restrict' | 'unrestrict'
+        const userId = req.user._id;
+
+        const group = await Group.findById(groupId);
+
+        if (!group) return res.status(404).json({ message: "Group not found" });
+
+        if (group.admin.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "Only admin can change permissions" });
+        }
+
+        if (action === 'restrict') {
+            // Add all members except admin to restricted list
+            group.restrictedUsers = group.members.filter(memberId => memberId.toString() !== group.admin.toString());
+        } else {
+            // Clear list
+            group.restrictedUsers = [];
+        }
+
+        await group.save();
+
+        // Return fully populated group
+        const updatedGroup = await Group.findById(groupId)
+            .populate("members", "-password")
+            .populate("admin", "-password")
+            .populate("restrictedUsers", "_id fullName");
+
+        res.json({ success: true, group: updatedGroup });
+
+    } catch (error) {
+        console.log("Error toggling all permissions:", error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};

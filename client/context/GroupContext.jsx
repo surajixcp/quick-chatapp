@@ -103,6 +103,18 @@ export const GroupProvider = ({ children }) => {
         }
     };
 
+    const toggleAllGroupPermissions = async (groupId, action) => {
+        try {
+            const { data } = await axios.post("/api/groups/toggle-all-permissions", { groupId, action });
+            if (data.success) {
+                setGroups((prev) => prev.map((g) => (g._id === groupId ? data.group : g)));
+                toast.success(action === 'restrict' ? "All members restricted" : "All members unrestricted");
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Error updating all permissions");
+        }
+    };
+
     useEffect(() => {
         if (authUser) {
             getGroups();
@@ -110,7 +122,7 @@ export const GroupProvider = ({ children }) => {
     }, [authUser]);
 
     return (
-        <GroupContext.Provider value={{ groups, createGroup, getGroups, updateGroup, addMemberToGroup, removeMemberFromGroup, deleteGroup, toggleGroupPermission }}>
+        <GroupContext.Provider value={{ groups, createGroup, getGroups, updateGroup, addMemberToGroup, removeMemberFromGroup, deleteGroup, toggleGroupPermission, toggleAllGroupPermissions }}>
             {children}
         </GroupContext.Provider>
     );
