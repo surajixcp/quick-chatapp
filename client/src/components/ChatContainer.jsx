@@ -242,7 +242,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   className='cursor-pointer relative'
                 >
                   {msg.image && (
-                    <img src={msg.image} alt='' className='max-w-[60vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-2' />
+                    <img src={msg.image} alt='' className='w-32 h-32 md:w-48 md:h-48 object-cover aspect-square border border-gray-700 rounded-lg mb-2' />
                   )}
                   {msg.fileUrl && (
                     <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 p-3 bg-gray-800 rounded-lg mb-2 border border-gray-700 hover:bg-gray-700 transition-colors max-w-[60vw] overflow-hidden'>
@@ -269,7 +269,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                     </a>
                   )}
                   {msg.text && (
-                    <p className={`p-3 max-w-[65vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
+                    <p className={`p-2 md:p-3 max-w-[60vw] sm:max-w-[250px] md:max-w-[350px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
                   )}
 
                   {/* Delete Options Popup */}
