@@ -1,5 +1,6 @@
 import Group from "../models/Group.js";
 import User from "../models/User.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const createGroup = async (req, res) => {
     try {
@@ -33,6 +34,39 @@ export const getUserGroups = async (req, res) => {
         res.json({ success: true, groups });
     } catch (error) {
         console.log("Get user groups error:", error.message);
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const updateGroup = async (req, res) => {
+    try {
+        const { groupId, name, image, description } = req.body;
+        const userId = req.user._id;
+
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(404).json({ success: false, message: "Group not found" });
+        }
+
+        if (group.admin.toString() !== userId.toString()) {
+            return res.status(403).json({ success: false, message: "Only admin can update group" });
+        }
+
+        let updatedData = { name, description };
+
+        if (image) {
+            const upload = await cloudinary.uploader.upload(image);
+            updatedData.image = upload.secure_url;
+        }
+
+        const updatedGroup = await Group.findByIdAndUpdate(groupId, updatedData, { new: true })
+            .populate("members", "-password")
+            .populate("admin", "-password");
+
+        res.json({ success: true, group: updatedGroup, message: "Group updated successfully" });
+
+    } catch (error) {
+        console.log("Update group error:", error.message);
         res.status(500).json({ success: false, message: error.message });
     }
 };

@@ -6,7 +6,8 @@ import { ThemeContext } from '../../context/ThemeContext'
 import { useContext } from 'react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { LogOut, Image, Link, Ban, UserX, UserCheck, X } from 'lucide-react'
+import { LogOut, Image, Link, Ban, UserX, UserCheck, X, Edit2 } from 'lucide-react'
+import EditGroupModal from './EditGroupModal'
 
 const RightSidebar = ({ onClose }) => {
 
@@ -16,6 +17,7 @@ const RightSidebar = ({ onClose }) => {
   const { theme, setTheme, themes } = useContext(ThemeContext);
   const [msgImages, setMsgImages] = useState([]);
   const [msgLinks, setMsgLinks] = useState([]);
+  const [showEditGroup, setShowEditGroup] = useState(false);
 
   useEffect(() => {
     const images = [];
@@ -65,7 +67,7 @@ const RightSidebar = ({ onClose }) => {
       <div className='pt-10 flex flex-col items-center gap-4 text-xs font-light mx-auto'>
         {isGroup ? (
           <div className="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-4xl text-white border-4 border-[#282142] shadow-lg">
-            {selectedUser.name[0]}
+            {selectedUser.image ? <img src={selectedUser.image} className="w-full h-full rounded-full object-cover" /> : selectedUser.name[0]}
           </div>
         ) : (
           <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-[#282142] shadow-lg' />
@@ -75,6 +77,11 @@ const RightSidebar = ({ onClose }) => {
           <h1 className='text-xl font-semibold flex items-center gap-2'>
             {selectedUser?.fullName || selectedUser?.name}
             {!isGroup && onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
+            {isAdmin && (
+              <button onClick={() => setShowEditGroup(true)} className='p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white' title="Edit Group Info">
+                <Edit2 className="w-4 h-4" />
+              </button>
+            )}
           </h1>
           <p className='text-gray-400 mt-1 max-w-[200px] text-center'>
             {isGroup ? `${selectedUser.members.length} members` : (selectedUser.bio || "No bio available")}
@@ -238,6 +245,13 @@ const RightSidebar = ({ onClose }) => {
           Logout
         </button>
       </div>
+
+      {showEditGroup && (
+        <EditGroupModal
+          group={selectedUser}
+          onClose={() => setShowEditGroup(false)}
+        />
+      )}
 
     </div>
   ) : null;

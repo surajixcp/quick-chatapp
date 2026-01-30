@@ -33,6 +33,20 @@ export const GroupProvider = ({ children }) => {
         }
     };
 
+    const updateGroup = async (groupId, name, image, description) => {
+        try {
+            const { data } = await axios.put("/api/groups/update", { groupId, name, image, description });
+            if (data.success) {
+                setGroups((prev) => prev.map(group => group._id === groupId ? data.group : group));
+                toast.success("Group updated successfully");
+                return true;
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update group");
+            return false;
+        }
+    };
+
     useEffect(() => {
         if (authUser) {
             getGroups();
@@ -40,7 +54,7 @@ export const GroupProvider = ({ children }) => {
     }, [authUser]);
 
     return (
-        <GroupContext.Provider value={{ groups, createGroup, getGroups }}>
+        <GroupContext.Provider value={{ groups, createGroup, getGroups, updateGroup }}>
             {children}
         </GroupContext.Provider>
     );
