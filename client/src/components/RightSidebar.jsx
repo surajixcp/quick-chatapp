@@ -16,11 +16,11 @@ const RightSidebar = ({ onClose }) => {
   const { selectedUser, messages, setSelectedUser } = useContext(ChatContext);
   const { logout, onlineUsers, authUser, axios } = useContext(AuthContext);
   const { theme, setTheme, themes } = useContext(ThemeContext);
-  const { removeMemberFromGroup, deleteGroup, toggleGroupPermission } = useContext(GroupContext); // Use GroupContext
+  const { groups, removeMemberFromGroup, deleteGroup, toggleGroupPermission } = useContext(GroupContext); // Use GroupContext with groups
   const [msgImages, setMsgImages] = useState([]);
   const [msgLinks, setMsgLinks] = useState([]);
   const [showEditGroup, setShowEditGroup] = useState(false);
-  const [showAddMember, setShowAddMember] = useState(false); // State for Add Member Modal
+  const [showAddMember, setShowAddMember] = useState(false);
 
   useEffect(() => {
     const images = [];
@@ -43,29 +43,33 @@ const RightSidebar = ({ onClose }) => {
     setMsgLinks(links);
   }, [messages]);
 
-  const isGroup = selectedUser?.members; // Check if selected item is a group
-  const isAdmin = isGroup && authUser._id === selectedUser.admin._id;
+  // Determine if active chat is a group and get latest data
+  const isGroupChat = selectedUser?.members !== undefined;
+  const activeGroup = isGroupChat ? groups.find(g => g._id === selectedUser._id) || selectedUser : null;
+
+  // Use activeGroup for group logic, selectedUser for DM logic
+  const displayUser = isGroupChat ? activeGroup : selectedUser;
+
+  // Admin Check (safe comparison)
+  const isAdmin = isGroupChat && authUser?._id?.toString() === activeGroup?.admin?._id?.toString();
 
   const handleLeaveGroup = async () => {
     // Placeholder for leave logic
     toast.error("Leave group feature coming soon");
-    //  if (!window.confirm("Are you sure you want to leave this group?")) return;
-    //  await removeMemberFromGroup(selectedUser._id, authUser._id); 
-    //  setSelectedUser(null);
   };
 
   const handleDeleteGroup = async () => {
     if (!window.confirm("Are you sure you want to delete this group?")) return;
-    const success = await deleteGroup(selectedUser._id);
+    const success = await deleteGroup(displayUser._id);
     if (success) setSelectedUser(null);
   };
 
   const handleRemoveMember = async (memberId) => {
     if (!window.confirm("Remove this member?")) return;
-    await removeMemberFromGroup(selectedUser._id, memberId);
+    await removeMemberFromGroup(displayUser._id, memberId);
   }
 
-  return selectedUser ? (
+  return displayUser ? (
     <div className={`text-white w-full h-full relative overflow-y-scroll bg-[#1E1E2E] max-lg:bg-[#151520]`}> {/* Added solid bg */}
       {/* Mobile Close Button */}
       <button
@@ -76,18 +80,18 @@ const RightSidebar = ({ onClose }) => {
       </button>
 
       <div className='pt-10 flex flex-col items-center gap-4 text-xs font-light mx-auto'>
-        {isGroup ? (
+        {isGroupChat ? (
           <div className="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center text-4xl text-white border-4 border-[#282142] shadow-lg">
-            {selectedUser.image ? <img src={selectedUser.image} className="w-full h-full rounded-full object-cover" /> : selectedUser.name[0]}
+            {displayUser.image ? <img src={displayUser.image} className="w-full h-full rounded-full object-cover" /> : displayUser.name[0]}
           </div>
         ) : (
-          <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-[#282142] shadow-lg' />
+          <img src={displayUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-[#282142] shadow-lg' />
         )}
 
         <div className='flex flex-col items-center'>
           <h1 className='text-xl font-semibold flex items-center gap-2'>
-            {selectedUser?.fullName || selectedUser?.name}
-            {!isGroup && onlineUsers.includes(selectedUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
+            {displayUser?.fullName || displayUser?.name}
+            {!isGroupChat && onlineUsers.includes(displayUser._id) && <span className='w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]'></span>}
             {isAdmin && (
               <button onClick={() => setShowEditGroup(true)} className='p-1 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white' title="Edit Group Info">
                 <Edit2 className="w-4 h-4" />
@@ -95,31 +99,31 @@ const RightSidebar = ({ onClose }) => {
             )}
           </h1>
           <p className='text-gray-300 mt-2 text-sm text-center px-4 max-h-24 overflow-y-auto'>
-            {isGroup ? (selectedUser.description || "") : (selectedUser.bio || "No bio available")}
+            {isGroupChat ? (displayUser.description || "") : (displayUser.bio || "No bio available")}
           </p>
-          {isGroup && (
+          {isGroupChat && (
             <p className='text-gray-400 mt-1 max-w-[200px] text-center text-xs'>
-              {selectedUser.members.length} members
+              {displayUser.members.length} members
             </p>
           )}
         </div>
       </div>
       <hr className='border-gray-700/50 my-6 mx-8' />
 
-      {isGroup ? (
+      {isGroupChat ? (
         // Group Specific UI
         <div className='px-8 text-xs'>
           <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Group Admin</p>
           <div className='flex items-center gap-3 p-2 bg-white/5 rounded-lg mb-6'>
-            <img src={selectedUser.admin.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' alt="" />
-            <p className='font-medium'>{selectedUser.admin.fullName}</p>
-            {authUser._id === selectedUser.admin._id && <span className='text-[10px] bg-violet-600 px-2 py-0.5 rounded text-white'>You</span>}
+            <img src={displayUser.admin?.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' alt="" />
+            <p className='font-medium'>{displayUser.admin?.fullName}</p>
+            {authUser._id?.toString() === displayUser.admin?._id?.toString() && <span className='text-[10px] bg-violet-600 px-2 py-0.5 rounded text-white'>You</span>}
           </div>
 
           <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Members</p>
           <div className='flex flex-col gap-2 mb-6'>
-            {selectedUser.members
-              .filter(member => member._id !== selectedUser.admin._id) // Filter out admin
+            {displayUser.members
+              .filter(member => member._id !== displayUser.admin._id) // Filter out admin
               .map(member => (
                 <div key={member._id} className='flex items-center justify-between p-2 hover:bg-white/5 rounded-lg transition-colors'>
                   <div className='flex items-center gap-3'>
@@ -130,12 +134,12 @@ const RightSidebar = ({ onClose }) => {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={async () => {
-                          await toggleGroupPermission(selectedUser._id, member._id);
+                          await toggleGroupPermission(displayUser._id, member._id);
                         }}
-                        className={`p-1 transition-colors ${selectedUser.restrictedUsers?.some(u => u._id === member._id) ? 'text-orange-400 hover:text-orange-300' : 'text-gray-400 hover:text-white'}`}
-                        title={selectedUser.restrictedUsers?.some(u => u._id === member._id) ? "Unmute (Allow Text)" : "Mute (Read Only)"}
+                        className={`p-1 transition-colors ${displayUser.restrictedUsers?.some(u => (u._id || u) === member._id) ? 'text-orange-400 hover:text-orange-300' : 'text-gray-400 hover:text-white'}`}
+                        title={displayUser.restrictedUsers?.some(u => (u._id || u) === member._id) ? "Unmute (Allow Text)" : "Mute (Read Only)"}
                       >
-                        {selectedUser.restrictedUsers?.some(u => u._id === member._id) ? <Ban className='w-4 h-4' /> : <Edit2 className='w-4 h-4' />}
+                        {displayUser.restrictedUsers?.some(u => (u._id || u) === member._id) ? <Ban className='w-4 h-4' /> : <Edit2 className='w-4 h-4' />}
                       </button>
                       <button onClick={() => handleRemoveMember(member._id)} className='text-red-400 hover:text-red-300 p-1' title="Remove Member">
                         <UserX className='w-4 h-4' />
@@ -144,7 +148,7 @@ const RightSidebar = ({ onClose }) => {
                   )}
                 </div>
               ))}
-            {selectedUser.members.length === 1 && <p className="text-gray-500 italic pl-2">No other members</p>}
+            {displayUser.members.length === 1 && <p className="text-gray-500 italic pl-2">No other members</p>}
           </div>
 
           <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Group Actions</p>
@@ -226,9 +230,9 @@ const RightSidebar = ({ onClose }) => {
               <button
                 onClick={async () => {
                   try {
-                    const isBlocked = authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id);
+                    const isBlocked = authUser?.blockedUsers?.some(user => user._id === displayUser._id || user === displayUser._id);
                     const endpoint = isBlocked ? '/api/auth/unblock' : '/api/auth/block';
-                    const { data } = await axios.post(endpoint, { id: selectedUser._id });
+                    const { data } = await axios.post(endpoint, { id: displayUser._id });
 
                     if (data.success) {
                       toast.success(data.message);
@@ -240,10 +244,10 @@ const RightSidebar = ({ onClose }) => {
                     toast.error("Error updating block status");
                   }
                 }}
-                className={`w-full py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20'}`}
+                className={`w-full py-2.5 rounded-lg font-medium transition-all flex items-center justify-center gap-2 ${authUser?.blockedUsers?.some(user => user._id === displayUser._id || user === displayUser._id) ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20'}`}
               >
-                {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? <UserCheck className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
-                {authUser?.blockedUsers?.some(user => user._id === selectedUser._id || user === selectedUser._id) ? 'Unblock User' : 'Block User'}
+                {authUser?.blockedUsers?.some(user => user._id === displayUser._id || user === displayUser._id) ? <UserCheck className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
+                {authUser?.blockedUsers?.some(user => user._id === displayUser._id || user === displayUser._id) ? 'Unblock User' : 'Block User'}
               </button>
 
               {/* Remove Friend Button */}
@@ -251,7 +255,7 @@ const RightSidebar = ({ onClose }) => {
                 onClick={async () => {
                   if (!window.confirm("Are you sure you want to remove this connection?")) return;
                   try {
-                    const { data } = await axios.post('/api/auth/remove-friend', { id: selectedUser._id });
+                    const { data } = await axios.post('/api/auth/remove-friend', { id: displayUser._id });
                     if (data.success) {
                       toast.success(data.message);
                       window.location.reload(); // Refresh to update sidebar list
@@ -281,14 +285,14 @@ const RightSidebar = ({ onClose }) => {
 
       {showEditGroup && (
         <EditGroupModal
-          group={selectedUser}
+          group={displayUser}
           onClose={() => setShowEditGroup(false)}
         />
       )}
 
       {showAddMember && (
         <AddMemberModal
-          group={selectedUser}
+          group={displayUser}
           onClose={() => setShowAddMember(false)}
         />
       )}
