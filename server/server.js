@@ -85,6 +85,13 @@ app.use((err, req, res, next) => {
 await connectDB();
 
 
+
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log("Server is running on PORT:"
-    + PORT));
+
+// Only listen if not running in Vercel (or similar serverless environments where we export the app)
+// Vercel serverless functions don't want you to call .listen() yourself on the exported function.
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    server.listen(PORT, () => console.log("Server is running on PORT:" + PORT));
+}
+
+export default app;
