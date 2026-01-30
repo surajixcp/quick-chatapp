@@ -6,9 +6,9 @@ import { ThemeContext } from '../../context/ThemeContext'
 import { useContext } from 'react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { LogOut, Image, Link, Ban, UserX, UserCheck } from 'lucide-react'
+import { LogOut, Image, Link, Ban, UserX, UserCheck, X } from 'lucide-react'
 
-const RightSidebar = () => {
+const RightSidebar = ({ onClose }) => {
 
 
   const { selectedUser, messages } = useContext(ChatContext);
@@ -39,7 +39,15 @@ const RightSidebar = () => {
   }, [messages]);
 
   return selectedUser ? (
-    <div className={`text-white w-full h-full relative overflow-y-scroll`}>
+    <div className={`text-white w-full h-full relative overflow-y-scroll bg-[#1E1E2E] max-lg:bg-[#151520]`}> {/* Added solid bg */}
+      {/* Mobile Close Button */}
+      <button
+        onClick={onClose}
+        className="lg:hidden absolute top-4 right-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors z-50"
+      >
+        <X className="w-5 h-5 text-gray-300" />
+      </button>
+
       <div className='pt-10 flex flex-col items-center gap-4 text-xs font-light mx-auto'>
         <img src={selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-24 aspect-[1/1] rounded-full object-cover border-4 border-[#282142] shadow-lg' />
         <div className='flex flex-col items-center'>

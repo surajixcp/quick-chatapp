@@ -29,7 +29,7 @@ const HomePage = () => {
 
         {/* RightSidebar */}
         {(selectedUser && showRightSidebar) && (
-          <div className={`border-l border-gray-700 bg-[#282142]/30 max-lg:absolute max-lg:right-0 max-lg:top-0 max-lg:bottom-0 max-lg:w-[300px] max-lg:z-20 transition-all`}>
+          <div className={`border-l border-gray-700 bg-[#282142] max-lg:fixed max-lg:inset-0 max-lg:z-50 max-lg:w-full transition-all`}>
             <RightSidebar onClose={() => setShowRightSidebar(false)} />
           </div>
         )}
