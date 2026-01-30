@@ -29,7 +29,7 @@ const Sidebar = () => {
 
   return (
     <div className={`bg-[#8185B2]/10 h-full flex flex-col rounded-r-xl overflow-hidden text-white ${selectedUser ? "max-md:hidden" : ""}`}>
-      <div className='p-5 pb-0 flex-1 overflow-y-auto custom-scrollbar'>
+      <div className='p-6 pb-0 flex-1 overflow-y-auto custom-scrollbar'>
         <div className='pb-5'>
           <div className='flex justify-between items-center'>
             <img src={assets.logo} alt="" className='max-w-40' />
@@ -75,7 +75,7 @@ const Sidebar = () => {
                 <div
                   onClick={() => { setSelectedUser(group); }} // Treating group as user for selection
                   key={group._id}
-                  className={`relative flex items-center gap-3 p-2 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === group._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
+                  className={`relative flex items-center gap-3 p-2 mx-1 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === group._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
                 >
                   <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white border border-indigo-400/30">{group.name[0]}</div>
                   <div className='flex flex-col leading-5'>
@@ -94,7 +94,7 @@ const Sidebar = () => {
               <div
                 onClick={() => { setSelectedUser(user); setUnseenMessages(prev => ({ ...prev, [user._id]: 0 })) }}
                 key={index}
-                className={`relative flex items-center gap-3 p-2 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === user._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
+                className={`relative flex items-center gap-3 p-2 mx-1 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === user._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
               >
                 <img src={user?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/10' />
                 <div className='flex flex-col leading-5'>

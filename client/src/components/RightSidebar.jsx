@@ -50,9 +50,9 @@ const RightSidebar = () => {
           <p className='text-gray-400 mt-1 max-w-[200px] text-center'>{selectedUser.bio || "No bio available"}</p>
         </div>
       </div>
-      <hr className='border-gray-700/50 my-6 mx-5' />
+      <hr className='border-gray-700/50 my-6 mx-8' />
 
-      <div className='px-5 text-xs'>
+      <div className='px-8 text-xs'>
         <div className='flex items-center gap-2 mb-3 text-gray-300'>
           <Image className="w-4 h-4" />
           <p className='font-medium uppercase tracking-wide'>Media ({msgImages.length})</p>
@@ -84,7 +84,7 @@ const RightSidebar = () => {
 
       </div>
 
-      <div className='px-5 text-xs group'>
+      <div className='px-8 text-xs group'>
         <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Themes</p>
         <div className='flex gap-3 mb-6'>
           {Object.keys(themes).map((t) => (
