@@ -314,8 +314,12 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             )}
 
             <div className='text-center text-xs flex-shrink-0'>
-              <img src={(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? authUser?.profilePic || assets.avatar_icon : (msg.senderId?.profilePic || selectedUser?.profilePic || assets.avatar_icon)} alt="" className='w-7 rounded-full' />
-              <p className='text-gray-500'>{formatMessageTime(msg.createdAt)}</p>
+              <img
+                src={(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? authUser?.profilePic || assets.avatar_icon : (msg.senderId?.profilePic || selectedUser?.profilePic || assets.avatar_icon)}
+                alt=""
+                className='w-8 h-8 rounded-full object-cover border border-white/10'
+              />
+              <p className='text-gray-500 mt-1'>{formatMessageTime(msg.createdAt)}</p>
             </div>
           </div>
         ))}
