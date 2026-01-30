@@ -242,14 +242,14 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   className='cursor-pointer relative'
                 >
                   {msg.image && (
-                    <img src={msg.image} alt='' className='max-w-[70vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-2' />
+                    <img src={msg.image} alt='' className='max-w-[60vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-2' />
                   )}
                   {msg.fileUrl && (
-                    <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 p-3 bg-gray-800 rounded-lg mb-2 border border-gray-700 hover:bg-gray-700 transition-colors'>
-                      <div className="bg-violet-500/20 p-2 rounded-full">
+                    <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 p-3 bg-gray-800 rounded-lg mb-2 border border-gray-700 hover:bg-gray-700 transition-colors max-w-[60vw] overflow-hidden'>
+                      <div className="bg-violet-500/20 p-2 rounded-full flex-shrink-0">
                         <FileText className="w-5 h-5 text-violet-400" />
                       </div>
-                      <span className="text-sm underline text-blue-400">View Document</span>
+                      <span className="text-sm underline text-blue-400 truncate">View Document</span>
                     </a>
                   )}
                   {msg.location && (
@@ -257,11 +257,11 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                       href={`https://www.google.com/maps?q=${msg.location.latitude},${msg.location.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block mb-2 rounded-lg overflow-hidden border border-gray-700"
+                      className="block mb-2 rounded-lg overflow-hidden border border-gray-700 max-w-[60vw]"
                     >
                       <div className="bg-gray-800 p-3 flex items-center gap-2">
-                        <MapPin className="w-5 h-5 text-red-500" />
-                        <span className="text-sm text-gray-300">Shared Location</span>
+                        <MapPin className="w-5 h-5 text-red-500 flex-shrink-0" />
+                        <span className="text-sm text-gray-300 truncate">Shared Location</span>
                       </div>
                       <div className="bg-gray-900 p-2 text-xs text-center text-gray-500">
                         Click to view on map
@@ -269,7 +269,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                     </a>
                   )}
                   {msg.text && (
-                    <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
+                    <p className={`p-3 max-w-[65vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
                   )}
 
                   {/* Delete Options Popup */}
@@ -290,7 +290,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
               </>
             )}
 
-            <div className='text-center text-xs'>
+            <div className='text-center text-xs flex-shrink-0'>
               <img src={(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? authUser?.profilePic || assets.avatar_icon : (msg.senderId?.profilePic || selectedUser?.profilePic || assets.avatar_icon)} alt="" className='w-7 rounded-full' />
               <p className='text-gray-500'>{formatMessageTime(msg.createdAt)}</p>
             </div>
