@@ -360,22 +360,22 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
                 {/* File Upload */}
                 <input onChange={handleFileSelect} type="file" id='file-upload' className='hidden' />
-                <label htmlFor='file-upload' className="ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all" title="Attach File">
+                <label htmlFor='file-upload' className="ml-1 md:ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all flex-shrink-0" title="Attach File">
                   <Paperclip className="w-5 h-5" />
                 </label>
 
                 {/* Location Share */}
-                <button onClick={handleSendLocation} className="ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all" title="Share Location">
+                <button onClick={handleSendLocation} className="ml-1 md:ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all flex-shrink-0" title="Share Location">
                   <MapPin className="w-5 h-5" />
                 </button>
 
                 {/* Image Upload */}
                 <input onChange={handleImageSelect} type="file" id='image' accept='image/*' hidden />
-                <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all" title="Send Image">
+                <label htmlFor='image' className="ml-1 md:ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all flex-shrink-0" title="Send Image">
                   <ImagePlus className="w-6 h-6" />
                 </label>
               </div>
-              <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
+              <button onClick={handleSendMessage} className='p-2 md:p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95 flex-shrink-0'>
                 <SendHorizontal className="w-5 h-5 text-white" />
               </button>
             </>
