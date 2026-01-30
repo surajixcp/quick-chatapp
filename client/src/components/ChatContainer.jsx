@@ -139,6 +139,28 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
     reader.readAsDataURL(file);
   }
 
+  const handleDownload = async (url, filename) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename || 'download';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      toast.success("Download started");
+    } catch (error) {
+      console.error("Download failed:", error);
+      toast.error("Failed to download media");
+      // Fallback to opening in new tab
+      window.open(url, '_blank');
+    }
+  };
+
   useEffect(() => {
     if (selectedUser) {
       getMessages(selectedUser._id);
@@ -270,7 +292,15 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                         </div>
                         <span className="text-sm underline text-blue-400 truncate">View</span>
                       </a>
-                      <a href={msg.fileUrl} download className='p-3 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors flex-shrink-0' title="Download">
+                      <a
+                        href={msg.fileUrl}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDownload(msg.fileUrl, msg.text || "document");
+                        }}
+                        className='p-3 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors flex-shrink-0'
+                        title="Download"
+                      >
                         <Download className="w-5 h-5 text-gray-400" />
                       </a>
                     </div>
@@ -436,15 +466,17 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
               onClick={(e) => e.stopPropagation()}
             />
 
-            <a
-              href={selectedImage}
-              download={`image-${Date.now()}.png`}
-              onClick={(e) => e.stopPropagation()}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDownload(selectedImage, `image-${Date.now()}.png`);
+              }}
               className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors shadow-lg"
             >
               <Download className="w-5 h-5" />
               Download
-            </a>
+            </button>
           </div>
         )
       }
