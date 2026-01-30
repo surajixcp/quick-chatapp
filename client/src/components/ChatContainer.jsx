@@ -6,7 +6,7 @@ import { ChatContext } from '../../context/ChatContext'
 import toast from 'react-hot-toast'
 import EmojiPicker from 'emoji-picker-react'
 import ForwardModal from './ForwardModal'
-import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info, Paperclip, MapPin, FileText } from 'lucide-react'
+import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info, Paperclip, MapPin, FileText, X } from 'lucide-react'
 
 const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
@@ -19,6 +19,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showForwardModal, setShowForwardModal] = useState(false);
   const [messageToForward, setMessageToForward] = useState(null);
+  const [attachment, setAttachment] = useState(null); // { type: 'image' | 'file', url: string, name: string }
 
 
   const handleDelete = (messageId, type) => {
@@ -34,14 +35,27 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (input.trim() === "") return null;
-    await sendMessage({ text: input.trim() });
+    if (input.trim() === "" && !attachment) return null;
+
+    const messageData = { text: input.trim() };
+    if (attachment) {
+      if (attachment.type === 'image') {
+        messageData.image = attachment.url;
+      } else if (attachment.type === 'file') {
+        messageData.file = attachment.url;
+      }
+    }
+
+    await sendMessage(messageData);
+
+    // Cleanup
     setInput("");
+    setAttachment(null);
     setShowEmojiPicker(false);
   }
 
-  // Handle sending a generic file (PDF, etc.)
-  const handleSendFile = async (e) => {
+  // Handle selecting a generic file (preview first)
+  const handleFileSelect = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -52,9 +66,13 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
     }
 
     const reader = new FileReader();
-    reader.onloadend = async () => {
-      await sendMessage({ file: reader.result });
-      e.target.value = ""; // Reset input
+    reader.onloadend = () => {
+      setAttachment({
+        type: 'file',
+        url: reader.result,
+        name: file.name
+      });
+      e.target.value = ""; // Reset input so same file can be selected again
     }
     reader.readAsDataURL(file);
   }
@@ -101,16 +119,20 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
     setSelectedMessageId(null);
   };
 
-  // Handle sending an image
-  const handleSendImage = async (e) => {
+  // Handle selecting an image (preview first)
+  const handleImageSelect = async (e) => {
     const file = e.target.files[0];
     if (!file || !file.type.startsWith("image/")) {
       toast.error("select an image file")
       return;
     }
     const reader = new FileReader();
-    reader.onloadend = async () => {
-      await sendMessage({ image: reader.result });
+    reader.onloadend = () => {
+      setAttachment({
+        type: 'image',
+        url: reader.result,
+        name: file.name
+      });
       e.target.value = "";
     }
     reader.readAsDataURL(file);
@@ -239,55 +261,78 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-2 md:gap-3 p-3 md:p-4 relative z-10' style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
-        <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-3 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
+      <div className='flex-none p-3 md:p-4 relative z-10' style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
 
-          {/* Emoji Picker */}
-          {showEmojiPicker && (
-            <div className="absolute bottom-16 left-0 z-50 shadow-2xl rounded-xl overflow-hidden border border-white/10">
-              <EmojiPicker
-                theme="dark"
-                onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
-              />
-            </div>
-          )}
+        {/* Attachment Preview */}
+        {attachment && (
+          <div className='mb-2 flex items-center gap-3 bg-gray-800/80 backdrop-blur-md p-2 rounded-xl border border-white/10 w-fit relative animate-fade-in-up'>
+            <button onClick={() => setAttachment(null)} className='translate-x-1/2 -translate-y-1/2 absolute top-0 right-0 p-1 bg-gray-600 rounded-full hover:bg-red-500 transition-colors z-20'>
+              <X className="w-3 h-3 text-white" />
+            </button>
 
-          <button
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
-          >
-            <Smile className="w-6 h-6" />
+            {attachment.type === 'image' ? (
+              <img src={attachment.url} alt="Preview" className='h-16 w-16 object-cover rounded-lg border border-white/10' />
+            ) : (
+              <div className='flex items-center gap-2 p-2'>
+                <div className="bg-violet-500/20 p-2 rounded-full">
+                  <FileText className="w-5 h-5 text-violet-400" />
+                </div>
+                <span className="text-sm text-gray-200 max-w-[150px] truncate">{attachment.name}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className='flex items-center gap-2 md:gap-3'>
+          <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-3 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
+
+            {/* Emoji Picker */}
+            {showEmojiPicker && (
+              <div className="absolute bottom-16 left-0 z-50 shadow-2xl rounded-xl overflow-hidden border border-white/10">
+                <EmojiPicker
+                  theme="dark"
+                  onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
+                />
+              </div>
+            )}
+
+            <button
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
+            >
+              <Smile className="w-6 h-6" />
+            </button>
+
+            <input
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+              onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
+              type="text"
+              placeholder='Type a message...'
+              className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
+            />
+
+            {/* File Upload */}
+            <input onChange={handleFileSelect} type="file" id='file-upload' className='hidden' />
+            <label htmlFor='file-upload' className="ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all" title="Attach File">
+              <Paperclip className="w-5 h-5" />
+            </label>
+
+            {/* Location Share */}
+            <button onClick={handleSendLocation} className="ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all" title="Share Location">
+              <MapPin className="w-5 h-5" />
+            </button>
+
+            {/* Image Upload */}
+            <input onChange={handleImageSelect} type="file" id='image' accept='image/*' hidden />
+            <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all" title="Send Image">
+              <ImagePlus className="w-6 h-6" />
+            </label>
+          </div>
+          <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
+            <SendHorizontal className="w-5 h-5 text-white" />
           </button>
-
-          <input
-            onChange={(e) => setInput(e.target.value)}
-            value={input}
-            onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
-            type="text"
-            placeholder='Type a message...'
-            className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
-          />
-
-          {/* File Upload */}
-          <input onChange={handleSendFile} type="file" id='file-upload' className='hidden' />
-          <label htmlFor='file-upload' className="ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all" title="Attach File">
-            <Paperclip className="w-5 h-5" />
-          </label>
-
-          {/* Location Share */}
-          <button onClick={handleSendLocation} className="ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all" title="Share Location">
-            <MapPin className="w-5 h-5" />
-          </button>
-
-          {/* Image Upload */}
-          <input onChange={handleSendImage} type="file" id='image' accept='image/*' hidden />
-          <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all" title="Send Image">
-            <ImagePlus className="w-6 h-6" />
-          </label>
         </div>
-        <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
-          <SendHorizontal className="w-5 h-5 text-white" />
-        </button>
       </div>
 
       {showForwardModal && (
