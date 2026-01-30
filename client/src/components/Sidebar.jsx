@@ -97,17 +97,17 @@ const Sidebar = () => {
                 className={`relative flex items-center gap-3 p-2 mx-1 pl-4 rounded-lg cursor-pointer transition-colors max-sm:text-sm ${selectedUser?._id === user._id ? 'bg-violet-600' : 'hover:bg-white/5'}`}
               >
                 <img src={user?.profilePic || assets.avatar_icon} alt="" className='w-10 h-10 rounded-full object-cover border border-white/10' />
-                <div className='flex flex-col leading-5'>
-                  <p className='font-medium'>{user.fullName}</p>
+                <div className='flex flex-col leading-5 min-w-0'>
+                  <p className='font-medium truncate'>{user.fullName}</p>
                   <div className='flex items-center gap-2'>
                     {onlineUsers.includes(user._id) ? (
                       <>
-                        <span className='w-2 h-2 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]'></span>
+                        <span className='w-2 h-2 rounded-full flex-shrink-0 bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]'></span>
                         <span className={`text-xs ${selectedUser?._id === user._id ? 'text-green-200' : 'text-green-400'}`}>Online</span>
                       </>
                     ) : (
                       <>
-                        <span className='w-2 h-2 rounded-full bg-gray-500'></span>
+                        <span className='w-2 h-2 rounded-full flex-shrink-0 bg-gray-500'></span>
                         <span className='text-gray-400 text-xs'>Offline</span>
                       </>
                     )}

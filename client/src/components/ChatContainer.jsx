@@ -133,9 +133,9 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   className='cursor-pointer'
                 >
                   {msg.image ? (
-                    <img src={msg.image} alt='' className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden mb-8' />
+                    <img src={msg.image} alt='' className='max-w-[70vw] sm:max-w-[300px] md:max-w-[400px] border border-gray-700 rounded-lg overflow-hidden mb-8' />
                   ) : (
-                    <p className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${msg.senderId == authUser._id ? 'rounded-br-none' : 'rounded-bl-none'}`}>{msg.text}</p>
+                    <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-8 break-words bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
                   )}
                 </div>
 
@@ -164,8 +164,8 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       </div>
 
       {/* ---------bottom area-------- */}
-      <div className='flex-none flex items-center gap-3 p-4 relative z-10' style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 20px)' }}>
-        <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full relative shadow-lg'>
+      <div className='flex-none flex items-center gap-2 md:gap-3 p-3 md:p-4 relative z-10' style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 12px)' }}>
+        <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-3 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
