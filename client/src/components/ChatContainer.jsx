@@ -211,7 +211,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       {/*----------------Chat area---------------------  */}
       <div className='flex-1 overflow-y-auto p-3 pb-6 flex flex-col min-h-0'>
         {messages.map((msg, index) => (
-          <div key={index} className={`flex items-end gap-2 justify-end group relative ${(msg.senderId?._id || msg.senderId).toString() !== authUser._id.toString() && 'flex-row-reverse'} animate-fade-in-up`}
+          <div key={index} className={`flex items-end gap-2 justify-end group relative ${(msg.senderId?._id || msg.senderId).toString() !== authUser._id.toString() && 'flex-row-reverse'} animate-fade-in-up ${selectedMessageId === msg._id ? 'z-50' : 'z-auto'}`}
           >
             {msg.isDeletedForEveryone ? (
               <div
