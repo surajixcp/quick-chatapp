@@ -6,7 +6,7 @@ import { ChatContext } from '../../context/ChatContext'
 import toast from 'react-hot-toast'
 import EmojiPicker from 'emoji-picker-react'
 import ForwardModal from './ForwardModal'
-import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info, Paperclip, MapPin, FileText, X } from 'lucide-react'
+import { SendHorizontal, ImagePlus, Smile, ArrowLeft, Info, Paperclip, MapPin, FileText, X, Download } from 'lucide-react'
 
 const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
@@ -20,6 +20,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
   const [showForwardModal, setShowForwardModal] = useState(false);
   const [messageToForward, setMessageToForward] = useState(null);
   const [attachment, setAttachment] = useState(null); // { type: 'image' | 'file', url: string, name: string }
+  const [selectedImage, setSelectedImage] = useState(null);
 
 
   const handleDelete = (messageId, type) => {
@@ -242,15 +243,25 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   className='cursor-pointer relative'
                 >
                   {msg.image && (
-                    <img src={msg.image} alt='' className='w-32 h-32 md:w-48 md:h-48 object-cover aspect-square border border-gray-700 rounded-lg mb-2' />
+                    <img
+                      onClick={() => setSelectedImage(msg.image)}
+                      src={msg.image}
+                      alt=''
+                      className='w-32 h-32 md:w-48 md:h-48 object-cover aspect-square border border-gray-700 rounded-lg mb-2 cursor-pointer hover:opacity-90 transition-opacity'
+                    />
                   )}
                   {msg.fileUrl && (
-                    <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 p-3 bg-gray-800 rounded-lg mb-2 border border-gray-700 hover:bg-gray-700 transition-colors max-w-[60vw] overflow-hidden'>
-                      <div className="bg-violet-500/20 p-2 rounded-full flex-shrink-0">
-                        <FileText className="w-5 h-5 text-violet-400" />
-                      </div>
-                      <span className="text-sm underline text-blue-400 truncate">View Document</span>
-                    </a>
+                    <div className="flex items-center gap-2 mb-2 max-w-[60vw]">
+                      <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex-1 flex items-center gap-2 p-3 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors overflow-hidden'>
+                        <div className="bg-violet-500/20 p-2 rounded-full flex-shrink-0">
+                          <FileText className="w-5 h-5 text-violet-400" />
+                        </div>
+                        <span className="text-sm underline text-blue-400 truncate">View</span>
+                      </a>
+                      <a href={msg.fileUrl} download className='p-3 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors flex-shrink-0' title="Download">
+                        <Download className="w-5 h-5 text-gray-400" />
+                      </a>
+                    </div>
                   )}
                   {msg.location && (
                     <a
@@ -394,8 +405,36 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
       </div>
 
+      {/* Media Viewer Modal */}
+      {
+        selectedImage && (
+          <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+            <button onClick={() => setSelectedImage(null)} className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors">
+              <X className="w-6 h-6 text-white" />
+            </button>
+
+            <img
+              src={selectedImage}
+              alt="Full view"
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            <a
+              href={selectedImage}
+              download={`image-${Date.now()}.png`}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-200 transition-colors shadow-lg"
+            >
+              <Download className="w-5 h-5" />
+              Download
+            </a>
+          </div>
+        )
+      }
+
       {/* Closes main container */}
-    </div>
+    </div >
   ) : (
     <div className='flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden'>
       <img src={assets.logo_icon} alt="" className='max-w-16' />
