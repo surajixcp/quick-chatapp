@@ -87,23 +87,34 @@ export const sendMessage = async (req, res) => {
         const senderId = req.user._id;
 
         // Check if blocked
+        // Check if blocked (Only if receiver is a user)
         const receiverUser = await User.findById(receiverId);
-        if (receiverUser.blockedUsers.includes(senderId)) {
-            return res.json({ success: false, message: "You are blocked by this user" });
+
+        if (receiverUser) {
+            if (receiverUser.blockedUsers && receiverUser.blockedUsers.includes(senderId)) {
+                return res.json({ success: false, message: "You are blocked by this user" });
+            }
         }
 
         // Check if sender blocked receiver (optional, usually you can't message someone you blocked)
         const senderUser = await User.findById(senderId);
-        if (senderUser.blockedUsers.includes(receiverId)) {
+        if (receiverUser && senderUser.blockedUsers.includes(receiverId)) {
             return res.json({ success: false, message: "Unblock user to send message" });
         }
 
         // Check if receiverId is a Group
-        const isGroup = await import("../models/Group.js").then(m => m.default.findById(receiverId));
+        const Group = (await import("../models/Group.js")).default;
+        const group = await Group.findById(receiverId);
 
-        if (isGroup && isGroup.restrictedUsers && isGroup.restrictedUsers.includes(senderId)) {
-            return res.json({ success: false, message: "Only admin can send messages to this group (you are restricted)" });
+        if (group) {
+            if (group.restrictedUsers && group.restrictedUsers.includes(senderId)) {
+                return res.json({ success: false, message: "Only admin can send messages to this group (you are restricted)" });
+            }
+        } else if (!receiverUser) {
+            return res.status(404).json({ success: false, message: "Receiver not found" });
         }
+
+        const isGroup = !!group;
 
         console.log('Send message request:', { senderId, receiverId, text: text ? text.substring(0, 50) + '...' : 'no text', hasImage: !!image, hasFile: !!file, hasLocation: !!location, isGroup: !!isGroup });
 
