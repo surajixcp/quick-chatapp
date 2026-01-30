@@ -330,7 +330,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             </div>
           ) : (
             <>
-              <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-3 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
+              <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-2 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
 
                 {/* Emoji Picker */}
                 {showEmojiPicker && (
@@ -344,9 +344,9 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
 
                 <button
                   onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                  className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
+                  className="mr-1 md:mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all flex-shrink-0"
                 >
-                  <Smile className="w-6 h-6" />
+                  <Smile className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
 
                 <input
@@ -355,24 +355,24 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
                   type="text"
                   placeholder='Type a message...'
-                  className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
+                  className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent min-w-0'
                 />
 
                 {/* File Upload */}
                 <input onChange={handleFileSelect} type="file" id='file-upload' className='hidden' />
                 <label htmlFor='file-upload' className="ml-1 md:ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all flex-shrink-0" title="Attach File">
-                  <Paperclip className="w-5 h-5" />
+                  <Paperclip className="w-4 h-4 md:w-5 md:h-5" />
                 </label>
 
                 {/* Location Share */}
                 <button onClick={handleSendLocation} className="ml-1 md:ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all flex-shrink-0" title="Share Location">
-                  <MapPin className="w-5 h-5" />
+                  <MapPin className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
 
                 {/* Image Upload */}
                 <input onChange={handleImageSelect} type="file" id='image' accept='image/*' hidden />
                 <label htmlFor='image' className="ml-1 md:ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all flex-shrink-0" title="Send Image">
-                  <ImagePlus className="w-6 h-6" />
+                  <ImagePlus className="w-5 h-5 md:w-6 md:h-6" />
                 </label>
               </div>
               <button onClick={handleSendMessage} className='p-2 md:p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95 flex-shrink-0'>
