@@ -169,7 +169,7 @@ export const sendMessage = async (req, res) => {
 
         if (isGroup) {
             // Emit to all group members
-            isGroup.members.forEach(memberId => {
+            group.members.forEach(memberId => {
                 if (memberId.toString() !== senderId.toString()) {
                     const memberSocketId = userSocketMap[memberId];
                     if (memberSocketId) {
