@@ -245,13 +245,25 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                   {msg.image && (
                     <img
                       onClick={() => setSelectedImage(msg.image)}
+                      onDoubleClick={(e) => {
+                        e.stopPropagation();
+                        // Close modal if it opened from the first click (hacky but improves UX)
+                        setSelectedImage(null);
+                        setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id);
+                      }}
                       src={msg.image}
                       alt=''
                       className='w-32 h-32 md:w-48 md:h-48 object-cover aspect-square border border-gray-700 rounded-lg mb-2 cursor-pointer hover:opacity-90 transition-opacity'
                     />
                   )}
                   {msg.fileUrl && (
-                    <div className="flex items-center gap-2 mb-2 max-w-[60vw]">
+                    <div
+                      className="flex items-center gap-2 mb-2 max-w-[60vw]"
+                      onDoubleClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id);
+                      }}
+                    >
                       <a href={msg.fileUrl} target="_blank" rel="noopener noreferrer" className='flex-1 flex items-center gap-2 p-3 bg-gray-800 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors overflow-hidden'>
                         <div className="bg-violet-500/20 p-2 rounded-full flex-shrink-0">
                           <FileText className="w-5 h-5 text-violet-400" />
