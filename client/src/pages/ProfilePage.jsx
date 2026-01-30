@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import assets from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import PageContainer from '../components/PageContainer';
+import { ArrowLeft } from 'lucide-react';
 
 const ProfilePage = () => {
 
@@ -10,8 +11,16 @@ const ProfilePage = () => {
 
   const [selectedImg, setSelectedImg] = useState(null)
   const navigate = useNavigate();
-  const [name, setName] = useState(authUser.fullName)
-  const [bio, setBio] = useState(authUser.bio)
+  const [name, setName] = useState(authUser?.fullName || '')
+  const [bio, setBio] = useState(authUser?.bio || '')
+
+  // Sync local state with authUser when it changes (e.g. on initial load or reset)
+  useEffect(() => {
+    if (authUser) {
+      setName(authUser.fullName || '');
+      setBio(authUser.bio || '');
+    }
+  }, [authUser]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,22 +38,38 @@ const ProfilePage = () => {
     }
   }
 
+  const handleCancel = () => {
+    setName(authUser?.fullName || '');
+    setBio(authUser?.bio || '');
+    setSelectedImg(null);
+    navigate('/'); // Or just reset fields? User asked for "add save/cancle and back to home". Usually cancel exits edit mode.
+  }
+
 
   return (
-    <PageContainer className='bg-cover bg-no-repeat flex items-center justify-center'>
+    <PageContainer className='bg-cover bg-no-repeat flex items-center justify-center relative'>
+      {/* Back to Home Button */}
+      <button
+        onClick={() => navigate('/')}
+        className='absolute top-6 left-6 flex items-center gap-2 text-white/70 hover:text-white transition-colors bg-black/20 px-4 py-2 rounded-lg backdrop-blur-sm'
+      >
+        <ArrowLeft className='w-5 h-5' />
+        <span>Back to Chat</span>
+      </button>
+
       <div className='w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border-2 border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg'>
         <form onSubmit={handleSubmit} className='flex flex-col gap-5 p-10 flex-1'>
           <h3 className='text-lg'>Profile details</h3>
           <div className='flex items-center gap-2'>
             <img src={assets.logo_icon} className='w-4 h-4 opacity-50' alt="User" />
-            <p className='text-sm font-light'>{authUser.fullName}</p>
+            <p className='text-sm font-light'>{authUser?.fullName}</p>
           </div>
           <div className='flex items-center gap-2'>
-            <p className='text-xs text-violet-300 bg-violet-900/30 px-2 py-1 rounded'>ID: @{authUser.username || 'user'}</p>
+            <p className='text-xs text-violet-300 bg-violet-900/30 px-2 py-1 rounded'>ID: @{authUser?.username || 'user'}</p>
           </div>
           <div className='flex items-center gap-2'>
             <span className="text-gray-500 text-xs">Email:</span>
-            <p className='text-sm font-light'>{authUser.email}</p>
+            <p className='text-sm font-light'>{authUser?.email}</p>
           </div>
           <label htmlFor='avatar' className='flex items-center gap-3 cursor-pointer'>
             <input onChange={(e) => setSelectedImg(e.target.files[0])} type="file" id='avatar' accept='.png, .jpg, .jpeg' hidden />
@@ -53,10 +78,23 @@ const ProfilePage = () => {
           </label>
           <input onChange={(e) => setName(e.target.value)} value={name} type="text" required placeholder='Your name' className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' />
           <textarea onChange={(e) => setBio(e.target.value)} value={bio} placeholder='Write profile bio' required className='p-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500' rows={4}></textarea>
-          <button type='submit' className='bg-gradient-to-r from-purple-400 to-violet-600 text-white p-2 rounded-full text-lg cursor-pointer'>Save</button>
+
+          <div className='flex gap-4 mt-2'>
+            <button type='submit' className='flex-1 bg-gradient-to-r from-purple-400 to-violet-600 text-white p-2 rounded-full text-lg cursor-pointer hover:opacity-90 transition-opacity'>
+              Save Changes
+            </button>
+            <button
+              type='button'
+              onClick={handleCancel}
+              className='flex-1 border border-gray-500 text-gray-300 p-2 rounded-full text-lg cursor-pointer hover:bg-white/10 transition-colors'
+            >
+              Cancel
+            </button>
+          </div>
+
         </form>
         <div className="flex flex-col items-center gap-4">
-          <img className={`max-w-44 aspect-square rounded-full max-10 max-sm:mt-10 p-5 ${selectedImg && 'rounded-full'}`} src={authUser?.profilePic || assets.logo_icon} alt="" />
+          <img className={`max-w-44 aspect-square rounded-full max-10 max-sm:mt-10 p-5 ${selectedImg && 'rounded-full'}`} src={selectedImg ? URL.createObjectURL(selectedImg) : (authUser?.profilePic || assets.logo_icon)} alt="" />
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
