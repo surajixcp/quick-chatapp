@@ -3,21 +3,24 @@ import assets from '../assets/assets'
 import { ChatContext } from '../../context/ChatContext'
 import { AuthContext } from '../../context/AuthContext'
 import { ThemeContext } from '../../context/ThemeContext'
+import { GroupContext } from '../../context/GroupContext' // Import GroupContext
 import { useContext } from 'react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { LogOut, Image, Link, Ban, UserX, UserCheck, X, Edit2 } from 'lucide-react'
 import EditGroupModal from './EditGroupModal'
+import AddMemberModal from './AddMemberModal' // Import AddMemberModal
 
 const RightSidebar = ({ onClose }) => {
 
-
-  const { selectedUser, messages } = useContext(ChatContext);
+  const { selectedUser, messages, setSelectedUser } = useContext(ChatContext);
   const { logout, onlineUsers, authUser, axios } = useContext(AuthContext);
   const { theme, setTheme, themes } = useContext(ThemeContext);
+  const { removeMemberFromGroup, deleteGroup } = useContext(GroupContext); // Use GroupContext
   const [msgImages, setMsgImages] = useState([]);
   const [msgLinks, setMsgLinks] = useState([]);
   const [showEditGroup, setShowEditGroup] = useState(false);
+  const [showAddMember, setShowAddMember] = useState(false); // State for Add Member Modal
 
   useEffect(() => {
     const images = [];
@@ -46,13 +49,21 @@ const RightSidebar = ({ onClose }) => {
   const handleLeaveGroup = async () => {
     // Placeholder for leave logic
     toast.error("Leave group feature coming soon");
+    //  if (!window.confirm("Are you sure you want to leave this group?")) return;
+    //  await removeMemberFromGroup(selectedUser._id, authUser._id); 
+    //  setSelectedUser(null);
   };
 
   const handleDeleteGroup = async () => {
     if (!window.confirm("Are you sure you want to delete this group?")) return;
-    // Placeholder for delete logic
-    toast.error("Delete group feature coming soon");
+    const success = await deleteGroup(selectedUser._id);
+    if (success) setSelectedUser(null);
   };
+
+  const handleRemoveMember = async (memberId) => {
+    if (!window.confirm("Remove this member?")) return;
+    await removeMemberFromGroup(selectedUser._id, memberId);
+  }
 
   return selectedUser ? (
     <div className={`text-white w-full h-full relative overflow-y-scroll bg-[#1E1E2E] max-lg:bg-[#151520]`}> {/* Added solid bg */}
@@ -102,26 +113,32 @@ const RightSidebar = ({ onClose }) => {
 
           <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Members</p>
           <div className='flex flex-col gap-2 mb-6'>
-            {selectedUser.members.map(member => (
-              <div key={member._id} className='flex items-center justify-between p-2 hover:bg-white/5 rounded-lg transition-colors'>
-                <div className='flex items-center gap-3'>
-                  <img src={member.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' alt="" />
-                  <p className='text-gray-300'>{member.fullName}</p>
+            {selectedUser.members
+              .filter(member => member._id !== selectedUser.admin._id) // Filter out admin
+              .map(member => (
+                <div key={member._id} className='flex items-center justify-between p-2 hover:bg-white/5 rounded-lg transition-colors'>
+                  <div className='flex items-center gap-3'>
+                    <img src={member.profilePic || assets.avatar_icon} className='w-8 h-8 rounded-full' alt="" />
+                    <p className='text-gray-300'>{member.fullName}</p>
+                  </div>
+                  {isAdmin && member._id !== authUser._id && (
+                    <button onClick={() => handleRemoveMember(member._id)} className='text-red-400 hover:text-red-300 p-1' title="Remove Member">
+                      <UserX className='w-4 h-4' />
+                    </button>
+                  )}
                 </div>
-                {isAdmin && member._id !== authUser._id && (
-                  <button className='text-red-400 hover:text-red-300 p-1' title="Remove Member">
-                    <UserX className='w-4 h-4' />
-                  </button>
-                )}
-              </div>
-            ))}
+              ))}
+            {selectedUser.members.length === 1 && <p className="text-gray-500 italic pl-2">No other members</p>}
           </div>
 
           <p className='mb-3 font-medium text-gray-300 uppercase tracking-wide'>Group Actions</p>
           <div className='flex flex-col gap-3'>
             {isAdmin ? (
               <>
-                <button className='w-full py-2.5 rounded-lg bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 font-medium transition-all flex items-center justify-center gap-2'>
+                <button
+                  onClick={() => setShowAddMember(true)}
+                  className='w-full py-2.5 rounded-lg bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 font-medium transition-all flex items-center justify-center gap-2'
+                >
                   <UserCheck className="w-4 h-4" /> Add Member
                 </button>
                 <button
@@ -250,6 +267,13 @@ const RightSidebar = ({ onClose }) => {
         <EditGroupModal
           group={selectedUser}
           onClose={() => setShowEditGroup(false)}
+        />
+      )}
+
+      {showAddMember && (
+        <AddMemberModal
+          group={selectedUser}
+          onClose={() => setShowAddMember(false)}
         />
       )}
 

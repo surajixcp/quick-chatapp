@@ -70,3 +70,73 @@ export const updateGroup = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export const addMember = async (req, res) => {
+    try {
+        const { groupId, userId } = req.body;
+        const adminId = req.user._id;
+
+        const group = await Group.findById(groupId);
+        if (!group) return res.status(404).json({ success: false, message: "Group not found" });
+
+        if (group.admin.toString() !== adminId.toString()) {
+            return res.status(403).json({ success: false, message: "Only admin can add members" });
+        }
+
+        if (group.members.includes(userId)) {
+            return res.status(400).json({ success: false, message: "User already in group" });
+        }
+
+        group.members.push(userId);
+        await group.save();
+
+        const updatedGroup = await Group.findById(groupId).populate("members", "-password").populate("admin", "-password");
+
+        res.json({ success: true, group: updatedGroup, message: "Member added successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const removeMember = async (req, res) => {
+    try {
+        const { groupId, userId } = req.body;
+        const adminId = req.user._id;
+
+        const group = await Group.findById(groupId);
+        if (!group) return res.status(404).json({ success: false, message: "Group not found" });
+
+        if (group.admin.toString() !== adminId.toString()) {
+            return res.status(403).json({ success: false, message: "Only admin can remove members" });
+        }
+
+        group.members = group.members.filter(id => id.toString() !== userId);
+        await group.save();
+
+        const updatedGroup = await Group.findById(groupId).populate("members", "-password").populate("admin", "-password");
+
+        res.json({ success: true, group: updatedGroup, message: "Member removed successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const deleteGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user._id;
+
+        const group = await Group.findById(groupId);
+        if (!group) return res.status(404).json({ success: false, message: "Group not found" });
+
+        if (group.admin.toString() !== userId.toString()) {
+            return res.status(403).json({ success: false, message: "Only admin can delete group" });
+        }
+
+        await Group.findByIdAndDelete(groupId);
+
+        res.json({ success: true, message: "Group deleted successfully", groupId });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

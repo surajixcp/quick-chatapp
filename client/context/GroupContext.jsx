@@ -47,6 +47,48 @@ export const GroupProvider = ({ children }) => {
         }
     };
 
+    const addMemberToGroup = async (groupId, userId) => {
+        try {
+            const { data } = await axios.post("/api/groups/add-member", { groupId, userId });
+            if (data.success) {
+                setGroups((prev) => prev.map(group => group._id === groupId ? data.group : group));
+                toast.success("Member added successfully");
+                return true;
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to add member");
+            return false;
+        }
+    };
+
+    const removeMemberFromGroup = async (groupId, userId) => {
+        try {
+            const { data } = await axios.post("/api/groups/remove-member", { groupId, userId });
+            if (data.success) {
+                setGroups((prev) => prev.map(group => group._id === groupId ? data.group : group));
+                toast.success("Member removed successfully");
+                return true;
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to remove member");
+            return false;
+        }
+    };
+
+    const deleteGroup = async (groupId) => {
+        try {
+            const { data } = await axios.delete(`/api/groups/delete/${groupId}`);
+            if (data.success) {
+                setGroups((prev) => prev.filter(group => group._id !== groupId));
+                toast.success("Group deleted successfully");
+                return true;
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to delete group");
+            return false;
+        }
+    };
+
     useEffect(() => {
         if (authUser) {
             getGroups();
@@ -54,7 +96,7 @@ export const GroupProvider = ({ children }) => {
     }, [authUser]);
 
     return (
-        <GroupContext.Provider value={{ groups, createGroup, getGroups, updateGroup }}>
+        <GroupContext.Provider value={{ groups, createGroup, getGroups, updateGroup, addMemberToGroup, removeMemberFromGroup, deleteGroup }}>
             {children}
         </GroupContext.Provider>
     );
