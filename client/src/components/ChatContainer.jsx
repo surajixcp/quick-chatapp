@@ -306,74 +306,81 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
         )}
 
         <div className='flex items-center gap-2 md:gap-3'>
-          <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-3 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
+          {selectedUser?.restrictedUsers?.some(u => u._id === authUser._id) ? (
+            <div className='flex-1 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-center text-sm font-medium'>
+              Only admins can send messages in this group.
+            </div>
+          ) : (
+            <>
+              <div className='flex-1 flex items-center bg-gray-900/40 backdrop-blur-md border border-white/10 px-3 md:px-4 py-2 rounded-full relative shadow-lg min-w-0'>
 
-            {/* Emoji Picker */}
-            {showEmojiPicker && (
-              <div className="absolute bottom-16 left-0 z-50 shadow-2xl rounded-xl overflow-hidden border border-white/10">
-                <EmojiPicker
-                  theme="dark"
-                  onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
+                {/* Emoji Picker */}
+                {showEmojiPicker && (
+                  <div className="absolute bottom-16 left-0 z-50 shadow-2xl rounded-xl overflow-hidden border border-white/10">
+                    <EmojiPicker
+                      theme="dark"
+                      onEmojiClick={(e) => setInput((prev) => prev + e.emoji)}
+                    />
+                  </div>
+                )}
+
+                <button
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
+                >
+                  <Smile className="w-6 h-6" />
+                </button>
+
+                <input
+                  onChange={(e) => setInput(e.target.value)}
+                  value={input}
+                  onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
+                  type="text"
+                  placeholder='Type a message...'
+                  className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
                 />
+
+                {/* File Upload */}
+                <input onChange={handleFileSelect} type="file" id='file-upload' className='hidden' />
+                <label htmlFor='file-upload' className="ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all" title="Attach File">
+                  <Paperclip className="w-5 h-5" />
+                </label>
+
+                {/* Location Share */}
+                <button onClick={handleSendLocation} className="ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all" title="Share Location">
+                  <MapPin className="w-5 h-5" />
+                </button>
+
+                {/* Image Upload */}
+                <input onChange={handleImageSelect} type="file" id='image' accept='image/*' hidden />
+                <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all" title="Send Image">
+                  <ImagePlus className="w-6 h-6" />
+                </label>
               </div>
-            )}
-
-            <button
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="mr-3 text-gray-400 hover:text-yellow-400 hover:scale-110 transition-all"
-            >
-              <Smile className="w-6 h-6" />
-            </button>
-
-            <input
-              onChange={(e) => setInput(e.target.value)}
-              value={input}
-              onKeyDown={(e) => e.key === 'Enter' ? handleSendMessage(e) : null}
-              type="text"
-              placeholder='Type a message...'
-              className='flex-1 text-sm p-1 border-none outline-none text-white placeholder-gray-400 bg-transparent'
-            />
-
-            {/* File Upload */}
-            <input onChange={handleFileSelect} type="file" id='file-upload' className='hidden' />
-            <label htmlFor='file-upload' className="ml-2 cursor-pointer text-gray-400 hover:text-emerald-400 hover:scale-110 transition-all" title="Attach File">
-              <Paperclip className="w-5 h-5" />
-            </label>
-
-            {/* Location Share */}
-            <button onClick={handleSendLocation} className="ml-2 cursor-pointer text-gray-400 hover:text-red-400 hover:scale-110 transition-all" title="Share Location">
-              <MapPin className="w-5 h-5" />
-            </button>
-
-            {/* Image Upload */}
-            <input onChange={handleImageSelect} type="file" id='image' accept='image/*' hidden />
-            <label htmlFor='image' className="ml-2 cursor-pointer text-gray-400 hover:text-blue-400 hover:scale-110 transition-all" title="Send Image">
-              <ImagePlus className="w-6 h-6" />
-            </label>
-          </div>
-          <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
-            <SendHorizontal className="w-5 h-5 text-white" />
-          </button>
+              <button onClick={handleSendMessage} className='p-3 bg-violet-600 rounded-full hover:bg-violet-500 hover:shadow-lg hover:shadow-violet-500/30 transition-all active:scale-95'>
+                <SendHorizontal className="w-5 h-5 text-white" />
+              </button>
+            </>
+          )}
         </div>
+
+        {showForwardModal && (
+          <ForwardModal
+            messageToForward={messageToForward}
+            onClose={() => {
+              setShowForwardModal(false);
+              setMessageToForward(null);
+            }}
+          />
+        )}
+
       </div>
-
-      {showForwardModal && (
-        <ForwardModal
-          messageToForward={messageToForward}
-          onClose={() => {
-            setShowForwardModal(false);
-            setMessageToForward(null);
-          }}
-        />
-      )}
-
-    </div>
-  ) : (
-    <div className='flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden'>
-      <img src={assets.logo_icon} alt="" className='max-w-16' />
-      <p className='text-lg font-medium text-white'>Chat anytime, anywhere</p>
-    </div>
-  )
+      ) : (
+      <div className='flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden'>
+        <img src={assets.logo_icon} alt="" className='max-w-16' />
+        <p className='text-lg font-medium text-white'>Chat anytime, anywhere</p>
+      </div>
+      )
 }
 
-export default ChatContainer
+      export default ChatContainer

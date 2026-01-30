@@ -30,7 +30,11 @@ export const createGroup = async (req, res) => {
 export const getUserGroups = async (req, res) => {
     try {
         const userId = req.user._id;
-        const groups = await Group.find({ members: userId }).populate("members", "-password").populate("admin", "-password").sort({ updatedAt: -1 });
+        const groups = await Group.find({ members: userId })
+            .populate("members", "-password")
+            .populate("admin", "-password")
+            .populate("restrictedUsers", "_id fullName") // Populate for frontend check
+            .sort({ updatedAt: -1 });
         res.json({ success: true, groups });
     } catch (error) {
         console.log("Get user groups error:", error.message);
@@ -136,6 +140,43 @@ export const deleteGroup = async (req, res) => {
         await Group.findByIdAndDelete(groupId);
 
         res.json({ success: true, message: "Group deleted successfully", groupId });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+export const toggleGroupPermission = async (req, res) => {
+    try {
+        const { groupId, userId } = req.body;
+        const adminId = req.user._id;
+
+        const group = await Group.findById(groupId);
+        if (!group) return res.status(404).json({ success: false, message: "Group not found" });
+
+        if (group.admin.toString() !== adminId.toString()) {
+            return res.status(403).json({ success: false, message: "Only admin can change permissions" });
+        }
+
+        if (!group.restrictedUsers) group.restrictedUsers = [];
+
+        const isRestricted = group.restrictedUsers.some(id => id.toString() === userId);
+
+        if (isRestricted) {
+            // Un-restrict (allow text)
+            group.restrictedUsers = group.restrictedUsers.filter(id => id.toString() !== userId);
+        } else {
+            // Restrict (read only)
+            group.restrictedUsers.push(userId);
+        }
+
+        await group.save();
+
+        const updatedGroup = await Group.findById(groupId)
+            .populate("members", "-password")
+            .populate("admin", "-password")
+            .populate("restrictedUsers", "fullName profilePic"); // Optional, but helps frontend if needed
+
+        res.json({ success: true, group: updatedGroup, message: "Permissions updated successfully" });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

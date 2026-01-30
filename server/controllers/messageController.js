@@ -101,6 +101,10 @@ export const sendMessage = async (req, res) => {
         // Check if receiverId is a Group
         const isGroup = await import("../models/Group.js").then(m => m.default.findById(receiverId));
 
+        if (isGroup && isGroup.restrictedUsers && isGroup.restrictedUsers.includes(senderId)) {
+            return res.json({ success: false, message: "Only admin can send messages to this group (you are restricted)" });
+        }
+
         console.log('Send message request:', { senderId, receiverId, text: text ? text.substring(0, 50) + '...' : 'no text', hasImage: !!image, hasFile: !!file, hasLocation: !!location, isGroup: !!isGroup });
 
         let imageUrl;

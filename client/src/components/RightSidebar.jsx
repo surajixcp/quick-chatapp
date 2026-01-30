@@ -16,7 +16,7 @@ const RightSidebar = ({ onClose }) => {
   const { selectedUser, messages, setSelectedUser } = useContext(ChatContext);
   const { logout, onlineUsers, authUser, axios } = useContext(AuthContext);
   const { theme, setTheme, themes } = useContext(ThemeContext);
-  const { removeMemberFromGroup, deleteGroup } = useContext(GroupContext); // Use GroupContext
+  const { removeMemberFromGroup, deleteGroup, toggleGroupPermission } = useContext(GroupContext); // Use GroupContext
   const [msgImages, setMsgImages] = useState([]);
   const [msgLinks, setMsgLinks] = useState([]);
   const [showEditGroup, setShowEditGroup] = useState(false);
@@ -127,9 +127,20 @@ const RightSidebar = ({ onClose }) => {
                     <p className='text-gray-300'>{member.fullName}</p>
                   </div>
                   {isAdmin && member._id !== authUser._id && (
-                    <button onClick={() => handleRemoveMember(member._id)} className='text-red-400 hover:text-red-300 p-1' title="Remove Member">
-                      <UserX className='w-4 h-4' />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={async () => {
+                          await toggleGroupPermission(selectedUser._id, member._id);
+                        }}
+                        className={`p-1 transition-colors ${selectedUser.restrictedUsers?.some(u => u._id === member._id) ? 'text-orange-400 hover:text-orange-300' : 'text-gray-400 hover:text-white'}`}
+                        title={selectedUser.restrictedUsers?.some(u => u._id === member._id) ? "Unmute (Allow Text)" : "Mute (Read Only)"}
+                      >
+                        {selectedUser.restrictedUsers?.some(u => u._id === member._id) ? <Ban className='w-4 h-4' /> : <Edit2 className='w-4 h-4' />}
+                      </button>
+                      <button onClick={() => handleRemoveMember(member._id)} className='text-red-400 hover:text-red-300 p-1' title="Remove Member">
+                        <UserX className='w-4 h-4' />
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
