@@ -213,7 +213,25 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
           <div key={index} className={`flex items-end gap-2 justify-end group relative ${msg.senderId !== authUser._id && 'flex-row-reverse'} animate-fade-in-up`}
           >
             {msg.isDeletedForEveryone ? (
-              <p className='p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 italic text-gray-400 bg-gray-800 border border-gray-700'>This message was deleted</p>
+              <div
+                className='relative group cursor-pointer'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedMessageId(selectedMessageId === msg._id ? null : msg._id);
+                }}
+              >
+                <p className='p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 italic text-gray-400 bg-gray-800 border border-gray-700'>This message was deleted</p>
+
+                {/* Delete Options Popup for Deleted Message */}
+                {selectedMessageId === msg._id && (
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className={`absolute top-8 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[120px]`}
+                  >
+                    <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap text-red-500'>Delete for me</button>
+                  </div>
+                )}
+              </div>
             ) : (
               <>
                 <div
