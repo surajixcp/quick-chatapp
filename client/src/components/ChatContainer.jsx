@@ -210,7 +210,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
       {/*----------------Chat area---------------------  */}
       <div className='flex-1 overflow-y-auto p-3 pb-6 flex flex-col min-h-0'>
         {messages.map((msg, index) => (
-          <div key={index} className={`flex items-end gap-2 justify-end group relative ${msg.senderId !== authUser._id && 'flex-row-reverse'} animate-fade-in-up`}
+          <div key={index} className={`flex items-end gap-2 justify-end group relative ${(msg.senderId?._id || msg.senderId).toString() !== authUser._id.toString() && 'flex-row-reverse'} animate-fade-in-up`}
           >
             {msg.isDeletedForEveryone ? (
               <div
@@ -226,7 +226,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                 {selectedMessageId === msg._id && (
                   <div
                     onClick={(e) => e.stopPropagation()}
-                    className={`absolute top-8 ${msg.senderId === authUser._id ? 'right-0' : 'left-0'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[120px]`}
+                    className={`absolute top-8 ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'right-0' : 'left-0'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[120px]`}
                   >
                     <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap text-red-500'>Delete for me</button>
                   </div>
@@ -269,19 +269,19 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
                     </a>
                   )}
                   {msg.text && (
-                    <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${msg.senderId === authUser._id ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
+                    <p className={`p-3 max-w-[75vw] sm:max-w-[350px] md:max-w-[500px] text-sm md:text-base font-light rounded-2xl rounded-tr-none mb-2 break-words bg-violet-500/30 text-white ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'rounded-br-none rounded-tr-2xl' : 'rounded-bl-none rounded-tl-2xl'}`}>{msg.text}</p>
                   )}
 
                   {/* Delete Options Popup */}
                   {selectedMessageId === msg._id && (
                     <div
                       onClick={(e) => e.stopPropagation()}
-                      className={`absolute top-0 ${msg.senderId === authUser._id ? 'right-full mr-2' : 'left-full ml-2'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[120px]`}
+                      className={`absolute top-0 ${(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? 'right-full mr-2' : 'left-full ml-2'} bg-white text-black text-xs rounded shadow-lg z-50 p-1 flex flex-col gap-1 min-w-[120px]`}
                     >
                       <button onClick={() => handleCopy(msg)} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>{msg.image ? "Copy Media" : "Copy Text"}</button>
                       <button onClick={() => handleForward(msg)} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>Forward</button>
                       <button onClick={() => handleDelete(msg._id, 'me')} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>Delete for me</button>
-                      {msg.senderId === authUser._id && (
+                      {(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() && (
                         <button onClick={() => handleDelete(msg._id, 'everyone')} className='hover:bg-gray-200 p-2 rounded text-left whitespace-nowrap'>Delete for everyone</button>
                       )}
                     </div>
@@ -291,7 +291,7 @@ const ChatContainer = ({ setShowRightSidebar, showRightSidebar }) => {
             )}
 
             <div className='text-center text-xs'>
-              <img src={msg.senderId === authUser._id ? authUser?.profilePic || assets.avatar_icon : selectedUser?.profilePic || assets.avatar_icon} alt="" className='w-7 rounded-full' />
+              <img src={(msg.senderId?._id || msg.senderId).toString() === authUser._id.toString() ? authUser?.profilePic || assets.avatar_icon : (msg.senderId?.profilePic || selectedUser?.profilePic || assets.avatar_icon)} alt="" className='w-7 rounded-full' />
               <p className='text-gray-500'>{formatMessageTime(msg.createdAt)}</p>
             </div>
           </div>
